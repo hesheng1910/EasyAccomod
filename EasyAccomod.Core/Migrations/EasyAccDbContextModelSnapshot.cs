@@ -43,6 +43,40 @@ namespace EasyAccomod.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            ConcurrencyStamp = "78385630-6757-47ce-aaa9-ad23a8024c41",
+                            Description = "Adminstrator Role",
+                            Name = "ADMIN",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            ConcurrencyStamp = "9033e74d-db58-4f1b-96db-2d7559ee6568",
+                            Description = "Employee Role",
+                            Name = "MODERATOR",
+                            NormalizedName = "MODERATOR"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            ConcurrencyStamp = "f8a05b7b-3624-4901-91a9-abee6d0a9410",
+                            Description = "Owner Role",
+                            Name = "OWNER",
+                            NormalizedName = "MODERATOR"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            ConcurrencyStamp = "64633d85-7d6c-439e-bf51-27129eaa471a",
+                            Description = "Renter Role",
+                            Name = "RENTER",
+                            NormalizedName = "RENTER"
+                        });
                 });
 
             modelBuilder.Entity("EasyAccomod.Core.Entities.AppUser", b =>
@@ -97,9 +131,6 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -121,6 +152,26 @@ namespace EasyAccomod.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccessFailedCount = 0,
+                            Address = "Tran Thai Tong",
+                            ConcurrencyStamp = "8f68cf5e-d10b-480b-8125-17a5f85d6d50",
+                            EmailConfirmed = false,
+                            FirstName = "Hoa",
+                            IsConfirm = true,
+                            LastName = "Nguyen",
+                            LockoutEnabled = false,
+                            NormalizedUserName = "admin",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPprsN9LkjIZedx9+Td0E3ZZqvMurRWuI0vivSpRFyCv0UuerN+sji2WYUnIHOBUTQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("EasyAccomod.Core.Entities.Comment", b =>
@@ -135,7 +186,7 @@ namespace EasyAccomod.Core.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<long?>("PostId")
+                    b.Property<long>("PostId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ReviewContent")
@@ -147,6 +198,9 @@ namespace EasyAccomod.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CommentId");
@@ -177,8 +231,14 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<DateTime>("NotifTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("OfMod")
+                        .HasColumnType("bit");
+
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("NotifId");
 
@@ -200,6 +260,9 @@ namespace EasyAccomod.Core.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<long?>("AppUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<double>("Area")
                         .HasColumnType("float");
 
@@ -220,27 +283,24 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<bool>("Hired")
                         .HasColumnType("bit");
 
-                    b.Property<byte[]>("Images")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Images")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Infrastructure")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsConfirm")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsOwner")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Property")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublicTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<short>("RoomCategory")
+                    b.Property<short>("RoomCategoryId")
                         .HasColumnType("smallint");
 
                     b.Property<string>("Street")
@@ -252,7 +312,12 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<long>("TotalView")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("PostId");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Posts");
                 });
@@ -272,19 +337,66 @@ namespace EasyAccomod.Core.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("UserId1")
+                    b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("ReportId");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("UserId1");
-
                     b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("EasyAccomod.Core.Entities.RoomCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("RoomCategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomCategorys");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            RoomCategoryName = "Nhà trọ"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            RoomCategoryName = "Chung Cư Mini"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            RoomCategoryName = "Nhà Nguyên Căn"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            RoomCategoryName = "Chung cư"
+                        });
+                });
+
+            modelBuilder.Entity("EasyAccomod.Core.Entities.UserLikePost", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PostId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("UserId", "PostId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("UserLikePosts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -361,6 +473,13 @@ namespace EasyAccomod.Core.Migrations
                     b.HasKey("UserId", "RoleId");
 
                     b.ToTable("AppUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1L,
+                            RoleId = 1L
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
@@ -386,9 +505,13 @@ namespace EasyAccomod.Core.Migrations
 
             modelBuilder.Entity("EasyAccomod.Core.Entities.Comment", b =>
                 {
-                    b.HasOne("EasyAccomod.Core.Entities.Post", null)
+                    b.HasOne("EasyAccomod.Core.Entities.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("EasyAccomod.Core.Entities.Notification", b =>
@@ -406,6 +529,15 @@ namespace EasyAccomod.Core.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("EasyAccomod.Core.Entities.Post", b =>
+                {
+                    b.HasOne("EasyAccomod.Core.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("EasyAccomod.Core.Entities.Report", b =>
                 {
                     b.HasOne("EasyAccomod.Core.Entities.Post", "Post")
@@ -414,9 +546,22 @@ namespace EasyAccomod.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("EasyAccomod.Core.Entities.UserLikePost", b =>
+                {
+                    b.HasOne("EasyAccomod.Core.Entities.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EasyAccomod.Core.Entities.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Post");
 

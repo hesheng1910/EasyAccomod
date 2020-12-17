@@ -10,11 +10,16 @@ namespace EasyAccomod.Core.Entities
     public class Notification
     {
         public long NotifId { get; set; }
+        public string UserName { get; set; }
         public long PostId { get; set; }
         public Post Post { get; set; }
         public DateTime NotifTime { get; set; }
         public string Content { get; set; }
         public bool IsDelete { get; set; }
+        /// <summary>
+        /// Thông báo đến Moderator hay không
+        /// </summary>
+        public bool OfMod { get; set; }
 
     }
 }

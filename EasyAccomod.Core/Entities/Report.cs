@@ -15,9 +15,8 @@ namespace EasyAccomod.Core.Entities
         /// <summary>
         /// Người dùng nào report
         /// </summary>
-        public Guid UserId { get; set; }
+        public long UserId { get; set; }
         public long PostId { get; set; }
-        public AppUser User { get; set; }
         public Post Post { get; set; }
 
     }

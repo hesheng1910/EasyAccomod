@@ -1,9 +1,15 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using EasyAccomod.Core.EF;
 using EasyAccomod.Core.Entities;
+using EasyAccomod.Core.Services.Comments;
+using EasyAccomod.Core.Services.Notifications;
+using EasyAccomod.Core.Services.Posts;
+using EasyAccomod.Core.Services.Reports;
 using EasyAccomod.Core.Services.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -39,14 +45,20 @@ namespace EasyAccomod
                 .AddEntityFrameworkStores<EasyAccDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddDistributedMemoryCache();           // Đăng ký dịch vụ lưu cache trong bộ nhớ 
+            services.AddSession(cfg => {                    // Đăng ký dịch vụ Session
+                cfg.Cookie.Name = "EasyAccomod";             // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
+                cfg.IdleTimeout = new TimeSpan(0, 60, 0);    // Thời gian tồn tại của Session
+            });
             //Declare DI
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
             services.AddTransient<IUserService, UserService>();
-
-            //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
-            //services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IReportService, ReportService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<INotificationService, NotificationService>();
 
             services.AddControllers();
 
@@ -54,34 +66,10 @@ namespace EasyAccomod
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger eShop Solution", Version = "v1" });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
-                      Enter 'Bearer' [space] and then your token in the text input below.
-                      \r\n\r\nExample: 'Bearer 12345abcdef'",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                  {
-                    {
-                      new OpenApiSecurityScheme
-                      {
-                        Reference = new OpenApiReference
-                          {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                          },
-                          Scheme = "oauth2",
-                          Name = "Bearer",
-                          In = ParameterLocation.Header,
-                        },
-                        new List<string>()
-                      }
-                    });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +84,10 @@ namespace EasyAccomod
                 app.UseRouting();
 
                 app.UseAuthorization();
+
+                app.UseSession();
+
+                app.UseStaticFiles();
 
                 app.UseEndpoints(endpoints =>
                 {

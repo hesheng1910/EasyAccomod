@@ -19,10 +19,10 @@ namespace EasyAccomod.Core.Services.User
 {
     public class UserService : IUserService
     {
-        private EasyAccDbContext easyAccDbContext;
-        private UserManager<AppUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly EasyAccDbContext context;
         private readonly IConfiguration _config;
 
         public UserService(UserManager<AppUser> userManager,
@@ -35,8 +35,14 @@ namespace EasyAccomod.Core.Services.User
             _roleManager = roleManager;
             _config = config;
         }
+        public async Task<bool> CheckUserAndRole(long accessId,string role)
+        {
+            var user = await _userManager.FindByIdAsync(accessId.ToString());
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
 
-        public async Task<string> Authencate(LoginModel model)
+            return await _userManager.IsInRoleAsync(user, role);
+        }
+        public async Task<long> Authencate(LoginModel model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
@@ -46,28 +52,13 @@ namespace EasyAccomod.Core.Services.User
             {
                 throw new ServiceException ("Đăng nhập không đúng");
             }
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.GivenName,user.FirstName),
-                new Claim(ClaimTypes.Role, string.Join(";",roles)),
-                new Claim(ClaimTypes.Name, model.UserName)
-            };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(_config["Tokens:Issuer"],
-                _config["Tokens:Issuer"],
-                claims,
-                expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return user.Id ; // Tra ve user Id
         }
-
-        public async Task<AppUser> Delete(long id)
+        public async Task<AppUser> Delete(long id,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
+
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
@@ -76,12 +67,13 @@ namespace EasyAccomod.Core.Services.User
             var reult = await _userManager.DeleteAsync(user);
             if (reult.Succeeded)
                 return user;
-
             return null;
         }
 
-        public async Task<UserViewModel> GetById(long id)
+        public async Task<UserViewModel> GetById(long id,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
@@ -103,6 +95,8 @@ namespace EasyAccomod.Core.Services.User
 
         public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingModel model)
         {
+            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var query = _userManager.Users;
             if (!string.IsNullOrEmpty(model.Keyword))
             {
@@ -162,9 +156,11 @@ namespace EasyAccomod.Core.Services.User
             }
             return null;
         }
-        public async Task<IList<string>> RoleAssign(long userId, RoleAssignModel model)
+        public async Task<IList<string>> RoleAssign(RoleAssignModel model)
         {
-            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
+            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null)
             {
                 throw new ServiceException("User doesn't exist");
@@ -182,6 +178,7 @@ namespace EasyAccomod.Core.Services.User
             var addedRoles = model.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
             foreach (var roleName in addedRoles)
             {
+                Console.WriteLine(roleName);
                 if (await _userManager.IsInRoleAsync(user, roleName) == false)
                 {
                     await _userManager.AddToRoleAsync(user, roleName);
@@ -191,6 +188,8 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<AppUser> Update(long userId, UserUpdateModel model)
         {
+            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             if (await _userManager.Users.AnyAsync(x => x.Email == model.Email && x.Id != userId))
             {
                 throw new ServiceException("Email is already exist");
@@ -207,6 +206,18 @@ namespace EasyAccomod.Core.Services.User
                 return user;
             }
             return null;
+        }
+        public async Task<AppUser> ConfirmUser(long userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null || user.IsConfirm) throw new ServiceException("Nguoi dung khong ton tai hoac da duoc confirm");
+            user.IsConfirm = true;
+            await _userManager.UpdateAsync(user);
+            return user;
+        }
+        public List<AppUser> GetUsersNeedConfirm()
+        {
+            return context.AppUsers.Where(x => x.IsConfirm == false).ToList();
         }
     }
 }

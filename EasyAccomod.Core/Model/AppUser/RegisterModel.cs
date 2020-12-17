@@ -56,5 +56,9 @@ namespace EasyAccomod.Core.Model.AppUser
         /// </summary>
         [Required(ErrorMessage = "IDENTITY_NUMBER_IS_REQUIRED")]
         public string IdentityNumber { get; set; }
+        /// <summary>
+        /// Id người truy cập
+        /// </summary>
+        public long AccessId { get; set; }
     }
 }

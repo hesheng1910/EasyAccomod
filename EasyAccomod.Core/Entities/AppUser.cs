@@ -11,7 +11,6 @@ namespace EasyAccomod.Core.Entities
 {
     public class AppUser : IdentityUser<long>
     { 
-        public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string IdentityNumber { get; set; }

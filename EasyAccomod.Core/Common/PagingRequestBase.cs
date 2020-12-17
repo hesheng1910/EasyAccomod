@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace EasyAccomod.Core.Common
 {
+    /// <summary>
+    /// Chưa verify
+    /// </summary>
     public class PagingRequestBase // Phân trang
     {
         public int PageIndex { get; set; }

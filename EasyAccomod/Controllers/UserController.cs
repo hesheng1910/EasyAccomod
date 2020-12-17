@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using EasyAccomod.Core.Services.User;
 using EasyAccomod.Core.Common;
+using Newtonsoft.Json;
 
 namespace EasyAccomod.Api.Controllers
 {
@@ -22,18 +23,6 @@ namespace EasyAccomod.Api.Controllers
             this.userService = userService;
         }
         /// <summary>
-        /// Đăng nhập lấy token cho vào authorize
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpGet("login")]
-        public async Task<IActionResult> Authencate(LoginModel model)
-        {
-            var result = await userService.Authencate(model);
-            if (result == null) BadRequest();
-            return Ok(result);
-        }
-        /// <summary>
         /// Lấy ra tài khoản theo Id
         /// </summary>
         /// <param name="id"></param>
@@ -41,8 +30,11 @@ namespace EasyAccomod.Api.Controllers
         [HttpGet("getbyId")]
         public async Task<IActionResult> GetById(long id)
         {
-            var result = await userService.GetById(id);
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.GetById(id,accessId);
             if (result == null) BadRequest();
+
             return Ok(result);
         }
         /// <summary>
@@ -51,11 +43,28 @@ namespace EasyAccomod.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet("getuserspaging")]
-        public async Task<IActionResult> GetUsersPaging(GetUserPagingModel model)
+        public async Task<IActionResult> GetUsersPaging(int pageIndex,int pageSize,string keyword)
         {
+            var session = HttpContext.Session;
+            GetUserPagingModel model = new GetUserPagingModel()
+            {
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Keyword = keyword,
+                AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION))
+        };
             var result = await userService.GetUsersPaging(model);
             if (result == null) BadRequest();
             return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Lấy các tài khoản cần confirm
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getconfirm")]
+        public IActionResult GetUsersNeedConfirm()
+        {
+            return Ok(userService.GetUsersNeedConfirm());
         }
         /// <summary>
         /// Đăng ký
@@ -65,25 +74,28 @@ namespace EasyAccomod.Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register (RegisterModel model)
         {
+            var session = HttpContext.Session;
+            model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.Register(model);
             if (result == null) BadRequest();
             return Ok(result);
         }
         /// <summary>
-        /// Phân quyền
+        /// Admin : Phân quyền
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("roleAssign")]
-        public async Task<IActionResult> RoleAssign(long userId, RoleAssignModel model)
+        public async Task<IActionResult> RoleAssign(RoleAssignModel model)
         {
-            var result = await userService.RoleAssign(userId,model);
+            var session = HttpContext.Session;
+            model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.RoleAssign(model);
             if (result == null) BadRequest();
             return Ok(result);
         }
         /// <summary>
-        /// Cập nhật người dùng
+        /// Mod,Admin: Cập nhật người dùng
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="model"></param>
@@ -91,14 +103,34 @@ namespace EasyAccomod.Api.Controllers
         [HttpPut("update")]
         public async Task<IActionResult> Update(long userId, UserUpdateModel model)
         {
+            var session = HttpContext.Session;
+            model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.Update(userId, model);
             if (result == null) BadRequest();
             return Ok(result);
         }
+        /// <summary>
+        /// Mod: Duyệt tài khoản
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPut("confirm")]
+        public async Task<IActionResult> ConfirmUser(long userId)
+        {
+            var result = await userService.ConfirmUser(userId);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Xóa tài khoản
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("deletebyid")]
         public async Task<IActionResult> Delete(long id)
         {
-            var result = await userService.Delete(id);
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.Delete(id, accessId);
             if (result == null) BadRequest();
             return Ok(result);
         }

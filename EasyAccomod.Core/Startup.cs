@@ -25,7 +25,13 @@ namespace EasyAccomod.Core
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+                }
+            });
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

@@ -11,11 +11,13 @@ namespace EasyAccomod.Core.Services.User
     public interface IUserService
     {
         Task<AppUser> Register(RegisterModel model);
-        Task<string> Authencate(LoginModel model);
-        Task<AppUser> Delete(long id);
-        Task<UserViewModel> GetById(long id);
+        Task<long> Authencate(LoginModel model);
+        Task<AppUser> Delete(long id, long userId);
+        Task<UserViewModel> GetById(long id,long userId);
         Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingModel model);
-        Task<IList<string>> RoleAssign(long userId, RoleAssignModel model);
+        Task<IList<string>> RoleAssign(RoleAssignModel model);
         Task<AppUser> Update(long userId, UserUpdateModel model);
+        List<AppUser> GetUsersNeedConfirm();
+        Task<AppUser> ConfirmUser(long userId);
     }
 }

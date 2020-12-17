@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAccomod.BackendApi", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyAccomod.Core", "EasyAccomod.Core\EasyAccomod.Core.csproj", "{8A8B1CD1-BD6C-4E38-A0BC-ED3021EC1699}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyAccomod.FrontendApi", "EasyAccomod.FrontendApi\EasyAccomod.FrontendApi.csproj", "{DC05DC95-6458-45BE-BF9E-67639FC493FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8A8B1CD1-BD6C-4E38-A0BC-ED3021EC1699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A8B1CD1-BD6C-4E38-A0BC-ED3021EC1699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A8B1CD1-BD6C-4E38-A0BC-ED3021EC1699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC05DC95-6458-45BE-BF9E-67639FC493FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC05DC95-6458-45BE-BF9E-67639FC493FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC05DC95-6458-45BE-BF9E-67639FC493FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC05DC95-6458-45BE-BF9E-67639FC493FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
