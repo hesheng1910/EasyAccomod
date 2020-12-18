@@ -19,12 +19,4 @@ dotnet tool install --global dotnet-ef
 
 dotnet ef --project EasyAccomod.Core database update IntialCreate
 
-dotnet ef --project EasyAccomod.Core database update DataSeeding
-
-dotnet ef --project EasyAccomod.Core database update RoomCategory
-
-dotnet ef --project EasyAccomod.Core database update LikePost
-
-dotnet ef --project EasyAccomod.Core database update FixComment
-
 #Đặt EasyAccomod.BackendApi hoặc EasyAccomod.FrontendApi để Run
