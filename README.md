@@ -20,6 +20,9 @@ dotnet tool install --global dotnet-ef
 dotnet ef --project EasyAccomod.Core database update IntialCreate
 
 #Đặt EasyAccomod.BackendApi hoặc EasyAccomod.FrontendApi để Run
- Tài khoản admin:
- admin
- Abc@1234
+
+Tài khoản admin:
+
+admin
+
+Abc@1234
