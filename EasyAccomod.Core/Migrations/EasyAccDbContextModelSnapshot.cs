@@ -48,7 +48,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "78385630-6757-47ce-aaa9-ad23a8024c41",
+                            ConcurrencyStamp = "98c01258-7dbe-4917-b273-21eb81094c2f",
                             Description = "Adminstrator Role",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
@@ -56,7 +56,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "9033e74d-db58-4f1b-96db-2d7559ee6568",
+                            ConcurrencyStamp = "8ecb794a-2c9d-41ca-ace3-8dee6161f2d4",
                             Description = "Employee Role",
                             Name = "MODERATOR",
                             NormalizedName = "MODERATOR"
@@ -64,7 +64,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "f8a05b7b-3624-4901-91a9-abee6d0a9410",
+                            ConcurrencyStamp = "7ee433ff-a654-4e15-86c6-e71e3a4e3ae0",
                             Description = "Owner Role",
                             Name = "OWNER",
                             NormalizedName = "MODERATOR"
@@ -72,7 +72,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 4L,
-                            ConcurrencyStamp = "64633d85-7d6c-439e-bf51-27129eaa471a",
+                            ConcurrencyStamp = "55805ce0-fcc8-4297-9dce-e467aa3a73b3",
                             Description = "Renter Role",
                             Name = "RENTER",
                             NormalizedName = "RENTER"
@@ -159,14 +159,14 @@ namespace EasyAccomod.Core.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             Address = "Tran Thai Tong",
-                            ConcurrencyStamp = "8f68cf5e-d10b-480b-8125-17a5f85d6d50",
+                            ConcurrencyStamp = "0670e408-beb5-4eda-a370-ebd81aad71d8",
                             EmailConfirmed = false,
                             FirstName = "Hoa",
                             IsConfirm = true,
                             LastName = "Nguyen",
                             LockoutEnabled = false,
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPprsN9LkjIZedx9+Td0E3ZZqvMurRWuI0vivSpRFyCv0UuerN+sji2WYUnIHOBUTQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJVrI2Ty1S1ZJS+BfH7lCMNxhZ/NZHeYOozP96IVrm4YYQhWpDbXWd9RCERkf6oikg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,

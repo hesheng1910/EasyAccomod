@@ -37,6 +37,7 @@ namespace EasyAccomod.FrontendApi.Controllers
             var result = await userService.Authencate(model);
             var session = HttpContext.Session;
             session.SetString(CommonConstants.USER_SESSION, result.ToString());
+            await session.CommitAsync();
             return Ok(session.GetString(CommonConstants.USER_SESSION));
         }
         /// <summary>
@@ -46,7 +47,6 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpGet("signout")]
         public IActionResult SignOut()
         {
- 
             HttpContext.Session.Clear();
             HttpContext.Session.Remove(CommonConstants.USER_SESSION);
             return Ok();

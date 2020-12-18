@@ -86,7 +86,6 @@ namespace EasyAccomod.Core.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IdentityNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -128,31 +127,51 @@ namespace EasyAccomod.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RoomCategorys",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomCategoryName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomCategorys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
                     PostId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     District = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AddressNearBy = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    RoomCategory = table.Column<short>(type: "smallint", nullable: false),
+                    RoomCategoryId = table.Column<short>(type: "smallint", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Area = table.Column<double>(type: "float", nullable: false),
-                    IsOwner = table.Column<bool>(type: "bit", nullable: false),
-                    Property = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Images = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Infrastructure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Contact = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     PublicTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalLike = table.Column<long>(type: "bigint", nullable: false),
                     TotalView = table.Column<long>(type: "bigint", nullable: false),
                     Hired = table.Column<bool>(type: "bit", nullable: false),
+                    AppUserId = table.Column<long>(type: "bigint", nullable: true),
                     IsConfirm = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.PostId);
+                    table.ForeignKey(
+                        name: "FK_Posts_AppUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,11 +180,12 @@ namespace EasyAccomod.Core.Migrations
                 {
                     CommentId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Star = table.Column<int>(type: "int", nullable: false),
                     ReviewContent = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsConfirm = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    PostId = table.Column<long>(type: "bigint", nullable: true)
+                    PostId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,7 +195,7 @@ namespace EasyAccomod.Core.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "PostId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,10 +204,12 @@ namespace EasyAccomod.Core.Migrations
                 {
                     NotifId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     NotifTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    OfMod = table.Column<bool>(type: "bit", nullable: false),
                     AppUserId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -214,25 +236,74 @@ namespace EasyAccomod.Core.Migrations
                     ReportId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Reason = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PostId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId1 = table.Column<long>(type: "bigint", nullable: true)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    PostId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reports", x => x.ReportId);
-                    table.ForeignKey(
-                        name: "FK_Reports_AppUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AppUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reports_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "PostId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLikePosts",
+                columns: table => new
+                {
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    PostId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLikePosts", x => new { x.UserId, x.PostId });
+                    table.ForeignKey(
+                        name: "FK_UserLikePosts_AppUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AppUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserLikePosts_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { 1L, "98c01258-7dbe-4917-b273-21eb81094c2f", "Adminstrator Role", "ADMIN", "ADMIN" },
+                    { 2L, "8ecb794a-2c9d-41ca-ace3-8dee6161f2d4", "Employee Role", "MODERATOR", "MODERATOR" },
+                    { 3L, "7ee433ff-a654-4e15-86c6-e71e3a4e3ae0", "Owner Role", "OWNER", "MODERATOR" },
+                    { 4L, "55805ce0-fcc8-4297-9dce-e467aa3a73b3", "Renter Role", "RENTER", "RENTER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AppUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { 1L, 1L });
+
+            migrationBuilder.InsertData(
+                table: "AppUsers",
+                columns: new[] { "Id", "AccessFailedCount", "Address", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IdentityNumber", "IsConfirm", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1L, 0, "Tran Thai Tong", "0670e408-beb5-4eda-a370-ebd81aad71d8", null, false, "Hoa", null, true, "Nguyen", false, null, null, "admin", "AQAAAAEAACcQAAAAEJVrI2Ty1S1ZJS+BfH7lCMNxhZ/NZHeYOozP96IVrm4YYQhWpDbXWd9RCERkf6oikg==", null, false, "", false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "RoomCategorys",
+                columns: new[] { "Id", "RoomCategoryName" },
+                values: new object[,]
+                {
+                    { 1, "Nhà trọ" },
+                    { 2, "Chung Cư Mini" },
+                    { 3, "Nhà Nguyên Căn" },
+                    { 4, "Chung cư" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -251,14 +322,19 @@ namespace EasyAccomod.Core.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Posts_AppUserId",
+                table: "Posts",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_PostId",
                 table: "Reports",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reports_UserId1",
-                table: "Reports",
-                column: "UserId1");
+                name: "IX_UserLikePosts_PostId",
+                table: "UserLikePosts",
+                column: "PostId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -291,10 +367,16 @@ namespace EasyAccomod.Core.Migrations
                 name: "Reports");
 
             migrationBuilder.DropTable(
-                name: "AppUsers");
+                name: "RoomCategorys");
+
+            migrationBuilder.DropTable(
+                name: "UserLikePosts");
 
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "AppUsers");
         }
     }
 }

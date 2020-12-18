@@ -59,13 +59,15 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("getfavourite")]
-        public async Task<IActionResult> GetFavouritePosts(long userId)
+        public async Task<IActionResult> GetFavouritePosts()
         {
+            await HttpContext.Session.LoadAsync();
+            var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
             var result = await postService.GetFavouritePosts(userId);
             return Ok(result);
         }
         [HttpPut("update")]
-        public async Task<IActionResult> UpdatePost(long postId, UpdatePostModel model)
+        public async Task<IActionResult> UpdatePost(long postId,[FromForm] UpdatePostModel model)
         {
             var result = await postService.UpdatePost(postId, model);
             return Ok(result);

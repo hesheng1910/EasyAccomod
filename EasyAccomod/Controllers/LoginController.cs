@@ -42,5 +42,16 @@ namespace EasyAccomod.BackendApi.Controllers
             session.SetString(CommonConstants.USER_SESSION,result.ToString());
             return Ok(result);
         }
+        /// <summary>
+        /// Đăng xuất
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("signout")]
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.Clear();
+            HttpContext.Session.Remove(CommonConstants.USER_SESSION);
+            return Ok();
+        }
     }
 }

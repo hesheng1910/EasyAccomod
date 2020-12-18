@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EasyAccomod.Core.Migrations
 {
     [DbContext(typeof(EasyAccDbContext))]
-    [Migration("20201216065047_LikePost")]
-    partial class LikePost
+    [Migration("20201218031439_IntialCreate")]
+    partial class IntialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,7 +50,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "41d8adf1-09bd-4b89-a00e-5eb15da8e2f2",
+                            ConcurrencyStamp = "98c01258-7dbe-4917-b273-21eb81094c2f",
                             Description = "Adminstrator Role",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
@@ -58,7 +58,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "ec35c6a2-a4e2-416c-93ec-33c1f1754adf",
+                            ConcurrencyStamp = "8ecb794a-2c9d-41ca-ace3-8dee6161f2d4",
                             Description = "Employee Role",
                             Name = "MODERATOR",
                             NormalizedName = "MODERATOR"
@@ -66,7 +66,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "6cf9d96e-dee4-4955-adf6-80c710cd5f1d",
+                            ConcurrencyStamp = "7ee433ff-a654-4e15-86c6-e71e3a4e3ae0",
                             Description = "Owner Role",
                             Name = "OWNER",
                             NormalizedName = "MODERATOR"
@@ -74,7 +74,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 4L,
-                            ConcurrencyStamp = "b5933d90-9f48-4d5c-9fc1-0401f4e3a3f0",
+                            ConcurrencyStamp = "55805ce0-fcc8-4297-9dce-e467aa3a73b3",
                             Description = "Renter Role",
                             Name = "RENTER",
                             NormalizedName = "RENTER"
@@ -161,14 +161,14 @@ namespace EasyAccomod.Core.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             Address = "Tran Thai Tong",
-                            ConcurrencyStamp = "7f8ea299-d3b0-471e-8c48-da4006acd062",
+                            ConcurrencyStamp = "0670e408-beb5-4eda-a370-ebd81aad71d8",
                             EmailConfirmed = false,
                             FirstName = "Hoa",
                             IsConfirm = true,
                             LastName = "Nguyen",
                             LockoutEnabled = false,
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJcQrXQa7YNMt0Wn+h39+2oUU+GB1IUjM6KIANK9EbJ6RsKP/veQ6Cj7gB62UASSPg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJVrI2Ty1S1ZJS+BfH7lCMNxhZ/NZHeYOozP96IVrm4YYQhWpDbXWd9RCERkf6oikg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -200,6 +200,9 @@ namespace EasyAccomod.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CommentId");
@@ -236,8 +239,8 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<long>("PostId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("NotifId");
 

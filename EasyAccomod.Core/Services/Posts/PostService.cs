@@ -24,7 +24,13 @@ namespace EasyAccomod.Core.Services.Posts
             this.context = context;
             this.userManager = userManager;
         }
+        public async Task<bool> CheckUserAndRole(long accessId, string role)
+        {
+            var user = await userManager.FindByIdAsync(accessId.ToString());
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
 
+            return await userManager.IsInRoleAsync(user, role);
+        }
         public async Task<PostViewModel> AddPost(AddPostModel model )
         {
             var filePath = @"Content/img/" + model.file.FileName;
