@@ -26,3 +26,27 @@ Tài khoản admin:
 admin
 
 Abc@1234
+
+Cấu trúc Project:
+
+Phần Api : Chứa controller
+
+Phần Core(Data) : Chứa những xử lý dữ liệu, xử lý nghiệp vụ
+
+Common : Chứa những class dùng chung cho tất cả project
+
+Configurations : Chứa những config về những trường của cơ sở dữ liệu
+
+EF : chứa cài đặt kết nối với cơ sở dữ liệu
+
+Entities : Chứa các đối tượng ( các bảng trong csdl)
+
+Migrations : Chứa các bản migration 
+
+Extension: Hiện tại đang chứa các data mẫu
+
+Model : Chứa các class request
+
+Service : Nơi xử lý nghiệp vụ
+
+
