@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EasyAccomod.Core.Entities
+namespace EasyAccomod.Core.Model.Post
 {
-    // Cơ sở vật chất
-    public class Infrastructure
+    public class SearchPostModel
     {
-        public long Id { get; set; }
-        /// <summary>
-        /// Điều hòa
-        /// </summary>
+        public string City { get; set; }
+        public string District { get; set; }
+        public string Commune { get; set; }
+        public string Street { get; set; }
+        public string AddressNearBy { get; set; }
+        public int RoomCategoryName { get; set; }
         public bool AirCond { get; set; }
         /// <summary>
         /// Tủ lạnh
@@ -23,24 +24,18 @@ namespace EasyAccomod.Core.Entities
         /// </summary>
         public bool WaterHeater { get; set; }
         /// <summary>
-        /// Giá điện VND/số
-        /// </summary>
-        public decimal ElecPrice { get; set; } 
-        /// <summary>
-        /// Giá nước theo m3
-        /// </summary>
-        public decimal WaterPrice { get; set; }
-        /// <summary>
-        /// Ban công
-        /// </summary>
-        public bool Balcony { get; set; }
-        /// <summary>
         /// Phòng tắm
         /// </summary>
         public bool Bath { get; set; }
         /// <summary>
+        /// Chung chủ hay không?
+        /// </summary>
+        public bool WithOwner { get; set; }
+        /// <summary>
         /// Bếp
         /// </summary>
         public KitchenCategoryEnum Kitchen { get; set; }
+        public decimal MaxPrice { get; set; }
+        public decimal MinPrice { get; set; }
     }
 }

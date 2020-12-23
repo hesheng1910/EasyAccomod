@@ -48,5 +48,6 @@ namespace EasyAccomod.FrontendApi.Controllers
             var result = await requestExtendService.RejectRequestExtend(requestId);
             return Ok(result);
         }
+
     }
 }

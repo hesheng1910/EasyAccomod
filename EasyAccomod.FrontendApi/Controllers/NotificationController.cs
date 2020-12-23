@@ -23,5 +23,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(notificationService.GetNotificationForOwner());
         }
+        [HttpGet("notifmod")]
+        public IActionResult GetNotificationForMod()
+        {
+            return Ok(notificationService.GetNotificationForMod());
+        }
     }
 }

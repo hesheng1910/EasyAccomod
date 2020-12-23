@@ -24,5 +24,6 @@ namespace EasyAccomod.Core.Services.Posts
         Task<Post> RejectPost(long postId);
         Task<Post> DeletePost(long postId);
         Task<Post> RecoverRejectPost(long postId);
+        List<PostViewModel> SearchPost(SearchPostModel model);
     }
 }

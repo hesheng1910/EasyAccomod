@@ -43,5 +43,20 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(await commentService.GetCommentByPostId(postId));
         }
+        [HttpGet("getconfirm")]
+        public IActionResult GetCommentsNeedConfirm()
+        {
+            return Ok(commentService.GetCommentsNeedConfirm());
+        }
+        /// <summary>
+        /// Trả về comment đã confirm
+        /// </summary>
+        /// <param name="cmtId"></param>
+        /// <returns></returns>
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmComment(long cmtId)
+        {
+            return Ok(await commentService.ConfirmComment(cmtId));
+        }
     }
 }

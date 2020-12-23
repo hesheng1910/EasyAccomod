@@ -29,5 +29,14 @@ namespace EasyAccomod.FrontendApi.Controllers
             if (result == null) return BadRequest();
             return Ok(result);
         }
+        /// <summary>
+        /// Mod
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getall")]
+        public IActionResult GetAllReport()
+        {
+            return Ok(reportService.GetAllReport());
+        }
     }
 }

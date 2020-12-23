@@ -14,6 +14,10 @@ namespace EasyAccomod.Core.Entities
         public long PostId { get; set; }
         public string City { get; set; }
         public string District { get; set; }
+        /// <summary>
+        /// Phường/Xã
+        /// </summary>
+        public string Commune { get; set; }
         public string Street { get; set; }
         /// <summary>
         /// Địa Chỉ ở gần

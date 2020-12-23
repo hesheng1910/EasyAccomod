@@ -14,11 +14,17 @@ namespace EasyAccomod.Core.Model.Post
         public string City { get; set; }
         [Required(ErrorMessage = "DISTRICT_IS_REQUIRED")]
         public string District { get; set; }
+        /// <summary>
+        /// Phường/Xã
+        /// </summary>
+        public string Commune { get; set; }
         [Required(ErrorMessage = "STREET_IS_REQUIRED")]
         public string Street { get; set; }
         public List<string> Educations { get; set; }
         public List<string> Medicals { get; set; }
         public List<string> BusStations { get; set; }
+        [Required(ErrorMessage = "ROOMS_IS_REQUIRED")]
+        public int Rooms { get; set; }
         [Required(ErrorMessage = "ROOM_CATEGORY_IS_REQUIRED")]
         public string RoomCategoryName { get; set; }
         /// <summary>
@@ -53,7 +59,7 @@ namespace EasyAccomod.Core.Model.Post
         /// Phòng tắm
         /// </summary>
         [Required(ErrorMessage = "BATH_IS_REQUIRED")]
-        public string Bath { get; set; }
+        public bool Bath { get; set; }
         /// <summary>
         /// Chung chủ hay không?
         /// </summary>
@@ -63,7 +69,7 @@ namespace EasyAccomod.Core.Model.Post
         /// Bếp
         /// </summary>
         [Required(ErrorMessage = "KITCHEN_IS_REQUIRED")]
-        public string Kitchen { get; set; }
+        public KitchenCategoryEnum Kitchen { get; set; }
         [Required(ErrorMessage = "PRICE_IS_REQUIRED")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "AREA_IS_REQUIRED")]

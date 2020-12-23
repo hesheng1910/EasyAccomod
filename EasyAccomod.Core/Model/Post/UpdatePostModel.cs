@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EasyAccomod.Core.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,7 +16,10 @@ namespace EasyAccomod.Core.Model.Post
         public string District { get; set; }
         [Required(ErrorMessage = "STREET_IS_REQUIRED")]
         public string Street { get; set; }
-        public string AddressNearBy { get; set; }
+        /// <summary>
+        /// Phường/Xã
+        /// </summary>
+        public string Commune { get; set; }
         /// <summary>
         /// Loại phòng được đánh số 1,2,3,4 chi tiết trong bảng RoomCategory
         /// </summary>
@@ -26,6 +30,7 @@ namespace EasyAccomod.Core.Model.Post
         public List<string> BusStations { get; set; }
         [Required(ErrorMessage = "PRICE_IS_REQUIRED")]
         public decimal Price { get; set; }
+        public int Rooms { get; set; }
         [Required(ErrorMessage = "AREA_IS_REQUIRED")]
         public double Area { get; set; }
         /// <summary>
@@ -60,7 +65,7 @@ namespace EasyAccomod.Core.Model.Post
         /// Phòng tắm
         /// </summary>
         [Required(ErrorMessage = "BATH_IS_REQUIRED")]
-        public string Bath { get; set; }
+        public bool Bath { get; set; }
         /// <summary>
         /// Chung chủ hay không?
         /// </summary>
@@ -70,7 +75,7 @@ namespace EasyAccomod.Core.Model.Post
         /// Bếp
         /// </summary>
         [Required(ErrorMessage = "KITCHEN_IS_REQUIRED")]
-        public string Kitchen { get; set; }
+        public KitchenCategoryEnum Kitchen { get; set; }
         /// <summary>
         /// Nhiều link ảnh cách nhau bằng dấu ;
         /// </summary>

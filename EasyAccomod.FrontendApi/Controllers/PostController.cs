@@ -58,6 +58,12 @@ namespace EasyAccomod.FrontendApi.Controllers
             var result = await postService.ViewPost(postId);
             return Ok(result);
         }
+        [HttpPost("search")]
+        public IActionResult SearchPost(SearchPostModel model)
+        {
+            var result = postService.SearchPost(model);
+            return Ok(result);
+        }
         /// <summary>
         /// Lấy danh sách user đã thích
         /// </summary>
@@ -105,16 +111,74 @@ namespace EasyAccomod.FrontendApi.Controllers
             var result = await postService.LikePost(postId, userId);
             return Ok(result);
         }
+        /// <summary>
+        /// Mod: Từ chối bài đăng
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
         [HttpPut("reject")]
         public async Task<IActionResult> RejectPost(long postId)
         {
             var result = await postService.RejectPost(postId);
             return Ok(result);
         }
+        /// <summary>
+        /// Mod: Xóa những bài đăng request
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleltePost(long postId)
         {
             var result = await postService.DeletePost(postId);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Thêm bài đăng
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("addformod")]
+        public async Task<IActionResult> AddPostForMod([FromForm] AddPostModel model)
+        {
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            model.UserId = Convert.ToInt64(userId);
+            var result = await postService.AddPostForMod(model);
+            if (result == null) return BadRequest();
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Lấy những post cần confirm
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("gettoconfirm")]
+        public IActionResult GetPostsNeedConfirm()
+        {
+            var result = postService.GetPostsNeedConfirm();
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Confirm 
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        [HttpPut("confirm")]
+        public async Task<IActionResult> ConfirmPost(long postId)
+        {
+            var result = await postService.ConfirmPost(postId);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Accepted lại các post đã reject
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        [HttpPut("recover")]
+        public async Task<IActionResult> RecoverRejectedPost(long postId)
+        {
+            var result = await postService.RecoverRejectPost(postId);
             return Ok(result);
         }
     }

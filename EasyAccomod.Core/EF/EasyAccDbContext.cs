@@ -31,6 +31,7 @@ namespace EasyAccomod.Core.EF
             modelBuilder.ApplyConfiguration(new InfrastructureConfiguration());
             modelBuilder.ApplyConfiguration(new AddressNearByConfiguration());
             modelBuilder.ApplyConfiguration(new RequestExtendConfiguration());
+            modelBuilder.ApplyConfiguration(new DateViewPostConfiguration());
             modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<long>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
@@ -48,5 +49,6 @@ namespace EasyAccomod.Core.EF
         public DbSet<Infrastructure> Infrastructures { get; set; }
         public DbSet<AddressNearBy> AddressNearBies { get; set; }
         public DbSet<RequestExtend> RequestExtends { get; set; }
+        public DbSet<DateViewPost> DateViewPosts { get; set; }
     }
 }

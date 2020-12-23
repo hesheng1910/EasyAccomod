@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using EasyAccomod.Core.Common;
 using EasyAccomod.Core.Enums;
 
+
 namespace EasyAccomod.Core.Services.Posts
 {
     public class PostService : IPostService
@@ -91,6 +92,8 @@ namespace EasyAccomod.Core.Services.Posts
                 City = model.City,
                 District = model.District,
                 Street = model.Street,
+                Commune = model.Commune,
+                Rooms = model.Rooms,
                 AddressNearById = context.AddressNearBies.OrderBy(x => x.Id).Last().Id,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
@@ -111,8 +114,10 @@ namespace EasyAccomod.Core.Services.Posts
                 PostId = context.Posts.OrderBy(p => p.PostId).Last().PostId,
                 City = model.City,
                 District = model.District,
+                Commune = model.Commune,
                 Street = model.Street,
                 AddressNearBy = addressNearBy,
+                Rooms = model.Rooms,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
                 Area = model.Area,
@@ -183,7 +188,9 @@ namespace EasyAccomod.Core.Services.Posts
                 UserId = model.UserId,
                 City = model.City,
                 District = model.District,
+                Commune = model.Commune,
                 Street = model.Street,
+                Rooms = model.Rooms,
                 AddressNearById = context.AddressNearBies.OrderBy(x => x.Id).Last().Id,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
@@ -205,7 +212,9 @@ namespace EasyAccomod.Core.Services.Posts
                 PostId = context.Posts.OrderBy(p => p.PostId).Last().PostId,
                 City = model.City,
                 District = model.District,
+                Commune = model.Commune,
                 Street = model.Street,
+                Rooms = model.Rooms,
                 AddressNearBy = addressNearBy,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
@@ -243,6 +252,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     p.City,
                                                     p.Description,
                                                     p.District,
+                                                    p.Commune,
                                                     p.ExpireTime,
                                                     p.Hired,
                                                     p.Images,
@@ -269,6 +279,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     i.WaterHeater,
                                                     i.WaterPrice,
                                                     i.UserId,
+                                                    i.Commune,
                                                     a.Medical,
                                                     a.BusStation,
                                                     a.Education,
@@ -299,6 +310,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.ElecPrice,
                                                         i.Fridge,
                                                         i.Kitchen,
+                                                        i.Commune,
                                                         i.WaterHeater,
                                                         i.WaterPrice,
                                                         i.Medical,
@@ -351,7 +363,9 @@ namespace EasyAccomod.Core.Services.Posts
                     PostId = post.PostId,
                     City = post.City,
                     District = post.District,
+                    Commune = post.Commune,
                     Street = post.Street,
+                    Rooms = post.Rooms,
                     AddressNearBy = addressNearBy,
                     Price = post.Price,
                     Area = post.Area,
@@ -401,6 +415,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     p.RoomCategoryId,
                                                     p.Rooms,
                                                     p.Street,
+                                                    p.Commune,
                                                     p.TotalLike,
                                                     p.TotalView,
                                                     p.WithOwner
@@ -411,6 +426,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     i.AirCond,
                                                     i.Balcony,
                                                     i.Bath,
+                                                    i.Commune,
                                                     i.ElecPrice,
                                                     i.Fridge,
                                                     i.Kitchen,
@@ -446,6 +462,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.Bath,
                                                         i.ElecPrice,
                                                         i.Fridge,
+                                                        i.Commune,
                                                         i.Kitchen,
                                                         i.WaterHeater,
                                                         i.WaterPrice,
@@ -499,7 +516,9 @@ namespace EasyAccomod.Core.Services.Posts
                     PostId = post.PostId,
                     City = post.City,
                     District = post.District,
+                    Commune = post.Commune,
                     Street = post.Street,
+                    Rooms = post.Rooms,
                     AddressNearBy = addressNearBy,
                     Price = post.Price,
                     Area = post.Area,
@@ -533,7 +552,9 @@ namespace EasyAccomod.Core.Services.Posts
                 PostId = post.PostId,
                 City = post.City,
                 District = post.District,
+                Commune = post.Commune,
                 Street = post.Street,
+                Rooms = post.Rooms,
                 AddressNearBy = addressNearBy,
                 Price = post.Price,
                 Area = post.Area,
@@ -562,6 +583,7 @@ namespace EasyAccomod.Core.Services.Posts
             var user = await userManager.FindByIdAsync(post.UserId.ToString());
             if (model.fileimgs.Count() < 3) throw new ServiceException("Cần upload ít nhất 3 ảnh");
             if ((model.ExpireTime - DateTime.Now).Days < 7) throw new ServiceException("Thời gian bài đăng có hiệu lực ít nhất 1 tuần");
+            if ((int)model.Kitchen < 1 && (int)model.Kitchen > 3) throw new ServiceException("Nhập loại bếp không đúng");
             foreach (var img in model.fileimgs)
             {
                 var filePath = @"Content/img/" + img.FileName;
@@ -605,6 +627,7 @@ namespace EasyAccomod.Core.Services.Posts
             post.City = model.City;
             post.District = model.District;
             post.Street = model.Street;
+            post.Commune = model.Commune;
             post.Price = model.Price;
             post.Area = model.Area;
             post.Hired = model.Hired;
@@ -617,7 +640,9 @@ namespace EasyAccomod.Core.Services.Posts
             {
                 City = post.City,
                 District = post.District,
+                Commune = post.Commune,
                 Street = post.Street,
+                Rooms = post.Rooms,
                 AddressNearBy = addressNearBy,
                 Price = post.Price,
                 Area = post.Area,
@@ -718,6 +743,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     p.RoomCategoryId,
                                                     p.Rooms,
                                                     p.Street,
+                                                    p.Commune,
                                                     p.TotalLike,
                                                     p.TotalView,
                                                     p.WithOwner
@@ -734,6 +760,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     i.WaterHeater,
                                                     i.WaterPrice,
                                                     i.UserId,
+                                                    i.Commune,
                                                     a.Medical,
                                                     a.BusStation,
                                                     a.Education,
@@ -767,6 +794,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.WaterHeater,
                                                         i.WaterPrice,
                                                         i.Medical,
+                                                        i.Commune,
                                                         i.BusStation,
                                                         i.Education,
                                                         u.PhoneNumber,
@@ -808,6 +836,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.PhoneNumber,
                                                         i.LastName,
                                                         i.FirstName,
+                                                        i.Commune,
                                                         i.Email,
                                                         i.Area,
                                                         i.City,
@@ -853,7 +882,9 @@ namespace EasyAccomod.Core.Services.Posts
                     PostId = post.PostId,
                     City = post.City,
                     District = post.District,
+                    Commune = post.Commune,
                     Street = post.Street,
+                    Rooms = post.Rooms,
                     AddressNearBy = addressNearBy,
                     Price = post.Price,
                     Area = post.Area,
@@ -943,6 +974,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     p.RoomCategoryId,
                                                     p.Rooms,
                                                     p.Street,
+                                                    p.Commune,
                                                     p.TotalLike,
                                                     p.TotalView,
                                                     p.WithOwner
@@ -953,6 +985,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                     i.AirCond,
                                                     i.Balcony,
                                                     i.Bath,
+                                                    i.Commune,
                                                     i.ElecPrice,
                                                     i.Fridge,
                                                     i.Kitchen,
@@ -986,6 +1019,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.AirCond,
                                                         i.Balcony,
                                                         i.Bath,
+                                                        i.Commune,
                                                         i.ElecPrice,
                                                         i.Fridge,
                                                         i.Kitchen,
@@ -1041,7 +1075,9 @@ namespace EasyAccomod.Core.Services.Posts
                     PostId = post.PostId,
                     City = post.City,
                     District = post.District,
+                    Commune = post.Commune,
                     Street = post.Street,
+                    Rooms = post.Rooms,
                     AddressNearBy = addressNearBy,
                     Price = post.Price,
                     Area = post.Area,
@@ -1090,6 +1126,188 @@ namespace EasyAccomod.Core.Services.Posts
             context.Posts.Update(post);
             await context.SaveChangesAsync();
             return post;
+        }
+        public List<PostViewModel> SearchPost(SearchPostModel model)
+        {
+            var searchResult = context.Infrastructures.Join(context.Posts, i => i.Id, p => p.InfrastructureId,
+                                                (i, p) => new
+                                                {
+                                                    p.PostId,
+                                                    i.AirCond,
+                                                    i.Balcony,
+                                                    i.Bath,
+                                                    i.ElecPrice,
+                                                    i.Fridge,
+                                                    i.Kitchen,
+                                                    i.WaterHeater,
+                                                    i.WaterPrice,
+                                                    p.UserId,
+                                                    p.AddressNearById,
+                                                    p.Area,
+                                                    p.City,
+                                                    p.Description,
+                                                    p.District,
+                                                    p.Commune,
+                                                    p.ExpireTime,
+                                                    p.Hired,
+                                                    p.Images,
+                                                    p.InfrastructureId,
+                                                    p.IsDetele,
+                                                    p.PostStatus,
+                                                    p.Price,
+                                                    p.RoomCategoryId,
+                                                    p.Rooms,
+                                                    p.Street,
+                                                    p.TotalLike,
+                                                    p.TotalView,
+                                                    p.WithOwner
+                                                }).Join(context.AddressNearBies, i => i.AddressNearById, a => a.Id,
+                                                (i, a) => new
+                                                {
+                                                    i.PostId,
+                                                    i.AirCond,
+                                                    i.Balcony,
+                                                    i.Bath,
+                                                    i.ElecPrice,
+                                                    i.Fridge,
+                                                    i.Kitchen,
+                                                    i.WaterHeater,
+                                                    i.WaterPrice,
+                                                    i.UserId,
+                                                    i.Commune,
+                                                    a.Medical,
+                                                    a.BusStation,
+                                                    a.Education,
+                                                    i.Area,
+                                                    i.City,
+                                                    i.Description,
+                                                    i.District,
+                                                    i.ExpireTime,
+                                                    i.Hired,
+                                                    i.Images,
+                                                    i.InfrastructureId,
+                                                    i.IsDetele,
+                                                    i.PostStatus,
+                                                    i.Price,
+                                                    i.RoomCategoryId,
+                                                    i.Rooms,
+                                                    i.Street,
+                                                    i.TotalLike,
+                                                    i.TotalView,
+                                                    i.WithOwner
+                                                }).Join(userManager.Users, i => i.UserId, u => u.Id,
+                                                    (i, u) => new
+                                                    {
+                                                        i.PostId,
+                                                        i.AirCond,
+                                                        i.Balcony,
+                                                        i.Bath,
+                                                        i.ElecPrice,
+                                                        i.Fridge,
+                                                        i.Kitchen,
+                                                        i.Commune,
+                                                        i.WaterHeater,
+                                                        i.WaterPrice,
+                                                        i.Medical,
+                                                        i.BusStation,
+                                                        i.Education,
+                                                        u.PhoneNumber,
+                                                        u.LastName,
+                                                        u.FirstName,
+                                                        u.Email,
+                                                        i.Area,
+                                                        i.City,
+                                                        i.Description,
+                                                        i.District,
+                                                        i.ExpireTime,
+                                                        i.Hired,
+                                                        i.Images,
+                                                        i.InfrastructureId,
+                                                        i.IsDetele,
+                                                        i.PostStatus,
+                                                        i.Price,
+                                                        i.RoomCategoryId,
+                                                        i.Rooms,
+                                                        i.Street,
+                                                        i.TotalLike,
+                                                        i.TotalView,
+                                                        i.WithOwner
+                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && p.ExpireTime < DateTime.Now);
+
+            if (model.City != null)
+            {
+                searchResult = searchResult.Where(x => x.City.Contains(model.City));
+                if(model.District != null)
+                {
+                    searchResult = searchResult.Where(x => x.District.Contains(model.District));
+                    if(model.Commune != null)
+                    {
+                        searchResult = searchResult.Where(x => x.Commune.Contains(model.Commune));
+                        if(model.Street != null)
+                            searchResult = searchResult.Where(x => x.Street.Contains(model.Street));
+                    }
+                }
+            }
+            if(model.AddressNearBy != null)
+            {
+                searchResult = searchResult.Where(x => x.Education.Contains(model.AddressNearBy) || x.BusStation.Contains(model.AddressNearBy) || x.Medical.Contains(model.AddressNearBy));
+            }
+            if(model.AirCond == true)
+                searchResult = searchResult.Where(x => x.AirCond == model.AirCond);
+            if (model.Bath == true)
+                searchResult = searchResult.Where( x => x.Bath == model.Bath);
+            if (model.WithOwner == true)
+                searchResult = searchResult.Where(x => x.WithOwner == model.WithOwner);
+            if (model.Fridge == true)
+                searchResult = searchResult.Where(x => x.Fridge == model.Fridge);
+            searchResult = searchResult.Where(x => x.Kitchen == model.Kitchen);
+            List<PostViewModel> models = new List<PostViewModel>();
+            foreach (var post in searchResult)
+            {
+                Infrastructure infrastructure = new Infrastructure
+                {
+                    AirCond = post.AirCond,
+                    Balcony = post.Balcony,
+                    Bath = post.Bath,
+                    ElecPrice = post.ElecPrice,
+                    WaterPrice = post.WaterPrice,
+                    Fridge = post.Fridge,
+                    Kitchen = post.Kitchen,
+                    WaterHeater = post.WaterHeater
+                };
+                AddressNearBy addressNearBy = new AddressNearBy()
+                {
+                    Medical = post.Medical,
+                    BusStation = post.BusStation,
+                    Education = post.Education,
+                };
+                PostViewModel modelVm = new PostViewModel()
+                {
+                    PostId = post.PostId,
+                    City = post.City,
+                    District = post.District,
+                    Commune = post.Commune,
+                    Street = post.Street,
+                    Rooms = post.Rooms,
+                    AddressNearBy = addressNearBy,
+                    Price = post.Price,
+                    Area = post.Area,
+                    Images = post.Images,
+                    Hired = post.Hired,
+                    Infrastructure = infrastructure,
+                    Contact = post.PhoneNumber,
+                    FullNameOwner = post.LastName + " " + post.FirstName,
+                    EmailOwner = post.Email,
+                    ExpireTime = post.ExpireTime,
+                    TotalLike = post.TotalLike,
+                    TotalView = post.TotalView,
+                    PostStatus = post.PostStatus,
+                    RoomCategoryId = post.RoomCategoryId
+                };
+                models.Add(modelVm);
+            }
+            return models;
+
         }
     }
 }
