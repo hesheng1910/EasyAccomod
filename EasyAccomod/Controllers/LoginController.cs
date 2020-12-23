@@ -29,14 +29,9 @@ namespace EasyAccomod.BackendApi.Controllers
         /// <param name="password"></param>
         /// <param name="rememberMe"></param>
         /// <returns></returns>
-        [HttpGet("login")]
-        public async Task<IActionResult> Authencate(string userName,string password,bool rememberMe)
+        [HttpPost("login")]
+        public async Task<IActionResult> Authencate(LoginModel model)
         {
-            LoginModel model = new LoginModel()
-            { UserName = userName,
-              Password = password,
-              RememberMe = rememberMe
-            };
             var result = await userService.Authencate(model);
             var session = HttpContext.Session;
             session.SetString(CommonConstants.USER_SESSION,result.ToString());

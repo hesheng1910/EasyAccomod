@@ -24,7 +24,7 @@ namespace EasyAccomod.Core.Services.Reports
 
         public async Task<Report> AddReport (AddReportModel model)
         {
-            var post = await context.Posts.FindAsync(model.PostId);
+            var post = context.Posts.Where(p => p.ExpireTime < DateTime.Now && p.PostStatus == Enums.PostStatusEnum.Accepted && p.PostId == model.PostId);
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             Report report = new Report()
             {

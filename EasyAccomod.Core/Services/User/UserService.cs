@@ -44,10 +44,10 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<long> Authencate(LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
+            var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm).FirstOrDefault();
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại hoặc chưa được confirm");
 
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, true);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password,false, true);
             if (!result.Succeeded)
             {
                 throw new ServiceException ("Đăng nhập không đúng");
@@ -132,6 +132,7 @@ namespace EasyAccomod.Core.Services.User
 
         public async Task<AppUser> Register(RegisterModel model)
         {
+            bool isConfirm = true;
             // Kiem tra xem nguoi dung da ton tai chua
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null) throw new ServiceException("User's already exist");
@@ -146,6 +147,35 @@ namespace EasyAccomod.Core.Services.User
                 Email = model.Email,
                 Address = model.Address,
                 IdentityNumber = model.IdentityNumber,
+                SecurityStamp = "",
+                IsConfirm = false 
+            };
+            var result = await _userManager.CreateAsync(appUser, model.Password);
+            
+            if (result.Succeeded)
+            {
+                return appUser;
+            }
+            if (result.Errors != null) throw new ServiceException(result.Errors.ToString());
+            return null;
+        }
+        public async Task<AppUser> RegisterForRenter(RegisterModel model)
+        {
+            // Kiem tra xem nguoi dung da ton tai chua
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user != null) throw new ServiceException("User's already exist");
+            // Kiem tra xem email da ton tai chua
+            if (await _userManager.FindByEmailAsync(model.Email) != null) throw new ServiceException("Email's already exist");
+            var appUser = new AppUser()
+            {
+                UserName = model.UserName,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.Phone,
+                Email = model.Email,
+                Address = model.Address,
+                IdentityNumber = model.IdentityNumber,
+                SecurityStamp = "",
                 IsConfirm = true
             };
             var result = await _userManager.CreateAsync(appUser, model.Password);
@@ -207,17 +237,19 @@ namespace EasyAccomod.Core.Services.User
             }
             return null;
         }
-        public async Task<AppUser> ConfirmUser(long userId)
+        public async Task<AppUser> ConfirmUser(long userId,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null || user.IsConfirm) throw new ServiceException("Nguoi dung khong ton tai hoac da duoc confirm");
             user.IsConfirm = true;
             await _userManager.UpdateAsync(user);
             return user;
         }
-        public List<AppUser> GetUsersNeedConfirm()
+        public async Task<List<AppUser>> GetUsersNeedConfirm(long accessId)
         {
-            return context.AppUsers.Where(x => x.IsConfirm == false).ToList();
+            return _userManager.Users.Where(x => x.IsConfirm == false).ToList();
         }
     }
 }

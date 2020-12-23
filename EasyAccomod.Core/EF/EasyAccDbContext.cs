@@ -28,6 +28,9 @@ namespace EasyAccomod.Core.EF
             modelBuilder.ApplyConfiguration(new NotificationConfiguration());
             modelBuilder.ApplyConfiguration(new RoomCategoryConfiguration());
             modelBuilder.ApplyConfiguration(new UserLikePostConfiguration());
+            modelBuilder.ApplyConfiguration(new InfrastructureConfiguration());
+            modelBuilder.ApplyConfiguration(new AddressNearByConfiguration());
+            modelBuilder.ApplyConfiguration(new RequestExtendConfiguration());
             modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<long>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
@@ -42,6 +45,8 @@ namespace EasyAccomod.Core.EF
         public DbSet<Report> Reports { get; set; }
         public DbSet<RoomCategory> RoomCategories { get; set; }
         public DbSet<UserLikePost> UserLikePosts { get; set; }
-        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Infrastructure> Infrastructures { get; set; }
+        public DbSet<AddressNearBy> AddressNearBies { get; set; }
+        public DbSet<RequestExtend> RequestExtends { get; set; }
     }
 }

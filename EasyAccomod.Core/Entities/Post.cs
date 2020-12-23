@@ -18,11 +18,15 @@ namespace EasyAccomod.Core.Entities
         /// <summary>
         /// Địa Chỉ ở gần
         /// </summary>
-        public string AddressNearBy { get; set; }
+        public long AddressNearById { get; set; }
         /// <summary>
         /// Loại Phòng 
         /// </summary>
         public RoomCategoryEnum RoomCategoryId { get; set; }
+        /// <summary>
+        /// Số phòng
+        /// </summary>
+        public int Rooms { get; set; }
         /// <summary>
         /// Giá tiền / tháng
         /// </summary>
@@ -31,16 +35,16 @@ namespace EasyAccomod.Core.Entities
         /// Diện tích
         /// </summary>
         public double Area { get; set; }
-        public string Infrastructure { get; set; }
-        public string Images { get; set; }
         /// <summary>
-        /// Thông tin liên hệ
+        /// Chung chủ hay không?
         /// </summary>
-        public string Contact { get; set; }
+        public bool WithOwner { get; set; }
+        public long InfrastructureId { get; set; }
+        public string Images { get; set; }
         /// <summary>
         /// Thời gian bài viết có hiệu lực
         /// </summary>
-        public DateTime PublicTime { get; set; }
+        public DateTime ExpireTime { get; set; }
         public long TotalLike { get; set; }
         public long TotalView { get; set; }
         /// <summary>
@@ -50,6 +54,8 @@ namespace EasyAccomod.Core.Entities
         public List<Report> Reports { get; set; }
         public List<Comment> Comments { get; set; }
         public AppUser AppUser { get; set; }
-        public bool IsConfirm { get; set; }
+        public PostStatusEnum PostStatus { get; set; }
+        public string Description { get; set; }
+        public bool IsDetele { get; set; }
     }
 }

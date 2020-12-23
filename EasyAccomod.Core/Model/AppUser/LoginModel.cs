@@ -21,9 +21,5 @@ namespace EasyAccomod.Core.Model.AppUser
         /// </summary>
         [Required(ErrorMessage = "PASSWORD_IS_REQUIRED")]
         public string Password { get; set; }
-        /// <summary>
-        /// Nhớ đăng nhập lần sau
-        /// </summary>
-        public bool RememberMe { get; set; }
     }
 }

@@ -16,24 +16,65 @@ namespace EasyAccomod.Core.Model.Post
         public string District { get; set; }
         [Required(ErrorMessage = "STREET_IS_REQUIRED")]
         public string Street { get; set; }
-        public string AddressNearBy { get; set; }
+        public List<string> Educations { get; set; }
+        public List<string> Medicals { get; set; }
+        public List<string> BusStations { get; set; }
         [Required(ErrorMessage = "ROOM_CATEGORY_IS_REQUIRED")]
         public string RoomCategoryName { get; set; }
+        /// <summary>
+        /// Điều hòa
+        /// </summary>
+        [Required(ErrorMessage = "AIRCOND_IS_REQUIRED")]
+        public bool AirCond { get; set; }
+        /// <summary>
+        /// Tủ lạnh
+        /// </summary>
+        public bool Fridge { get; set; }
+        /// <summary>
+        /// Bình nước nóng
+        /// </summary>
+        public bool WaterHeater { get; set; }
+        /// <summary>
+        /// Giá điện VND/số
+        /// </summary>
+        [Required(ErrorMessage = "ElecPrice_IS_REQUIRED")]
+        public decimal ElecPrice { get; set; }
+        /// <summary>
+        /// Giá nước theo m3
+        /// </summary>
+        [Required(ErrorMessage = "WaterPrice_IS_REQUIRED")]
+        public decimal WaterPrice { get; set; }
+        /// <summary>
+        /// Ban công
+        /// </summary>
+        [Required(ErrorMessage = "Balcony_IS_REQUIRED")]
+        public bool Balcony { get; set; }
+        /// <summary>
+        /// Phòng tắm
+        /// </summary>
+        [Required(ErrorMessage = "BATH_IS_REQUIRED")]
+        public string Bath { get; set; }
+        /// <summary>
+        /// Chung chủ hay không?
+        /// </summary>
+        [Required(ErrorMessage = "WithOwner_IS_REQUIRED")]
+        public bool WithOwner { get; set; }
+        /// <summary>
+        /// Bếp
+        /// </summary>
+        [Required(ErrorMessage = "KITCHEN_IS_REQUIRED")]
+        public string Kitchen { get; set; }
         [Required(ErrorMessage = "PRICE_IS_REQUIRED")]
         public decimal Price { get; set; }
         [Required(ErrorMessage = "AREA_IS_REQUIRED")]
         public double Area { get; set; }
-        [Required(ErrorMessage = "INFRASTRUCTURE_IS_REQUIRED")]
-        public string Infrastructure { get; set; }
         public string Images { get; set; }
-        [Required(ErrorMessage = "CONTRACT_IS_REQUIRED")]
-        public string Contact { get; set; }
-        public DateTime PublicTime { get; set; }
+        public DateTime ExpireTime { get; set; }
         /// <summary>
         /// Đã được thuê chưa?
         /// </summary>
         public bool Hired { get; set; }
-        public IFormFile file { get; set; }
+        public List<IFormFile> fileimgs { get; set; }
         public long UserId { get; set; }
     }
 }

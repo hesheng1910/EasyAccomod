@@ -6,7 +6,7 @@ using EasyAccomod.Core.Services.Notifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EasyAccomod.FrontendApi.Controllers
+namespace EasyAccomod.BackendApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,10 +18,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             this.notificationService = notificationService;
         }
-        [HttpGet("notifowner")]
-        public IActionResult GetNotificationForOwner()
+        [HttpGet("notifmod")]
+        public IActionResult GetNotificationForMod()
         {
-            return Ok(notificationService.GetNotificationForOwner());
+            return Ok(notificationService.GetNotificationForMod());
         }
     }
 }

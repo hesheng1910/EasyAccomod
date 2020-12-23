@@ -25,15 +25,9 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("login")]
-        public async Task<IActionResult> Authencate(string userName, string password, bool rememberMe)
+        [HttpPost("login")]
+        public async Task<IActionResult> Authencate(LoginModel model)
         {
-            LoginModel model = new LoginModel()
-            {
-                UserName = userName,
-                Password = password,
-                RememberMe = rememberMe
-            };
             var result = await userService.Authencate(model);
             var session = HttpContext.Session;
             session.SetString(CommonConstants.USER_SESSION, result.ToString());
@@ -52,17 +46,26 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok();
         }
         /// <summary>
-        /// Đăng ký
+        /// Đăng ký làm chủ trọ
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
-
-            var session = HttpContext.Session;
-            model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.Register(model);
+            if (result == null) BadRequest();
+            return Ok(result);
+        }
+        /// <summary>
+        /// Đăng ký renter
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("registerrenter")]
+        public async Task<IActionResult> RegisterForRenter(RegisterModel model)
+        {
+            var result = await userService.RegisterForRenter(model);
             if (result == null) BadRequest();
             return Ok(result);
         }

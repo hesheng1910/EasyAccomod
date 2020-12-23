@@ -42,6 +42,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(postService.GetAllPost());
         }
+        [HttpGet("getallforowner")]
+        public IActionResult GetAllPostForOwner()
+        {
+            return Ok(postService.GetAllPostForOwner());
+        }
         /// <summary>
         /// Xem bài đăng
         /// </summary>
@@ -98,6 +103,18 @@ namespace EasyAccomod.FrontendApi.Controllers
             var session = HttpContext.Session;
             var userId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await postService.LikePost(postId, userId);
+            return Ok(result);
+        }
+        [HttpPut("reject")]
+        public async Task<IActionResult> RejectPost(long postId)
+        {
+            var result = await postService.RejectPost(postId);
+            return Ok(result);
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleltePost(long postId)
+        {
+            var result = await postService.DeletePost(postId);
             return Ok(result);
         }
     }

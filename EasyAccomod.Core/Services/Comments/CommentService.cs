@@ -10,6 +10,7 @@ using EasyAccomod.Core.EF;
 using AGID.Core.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using EasyAccomod.Core.Model.Comment;
+using EasyAccomod.Core.Enums;
 
 namespace EasyAccomod.Core.Services.Comments
 {
@@ -25,10 +26,10 @@ namespace EasyAccomod.Core.Services.Comments
         }
         public async Task<Comment> AddComment(long userId,long postId, AddCommentModel model)
         {
-            var user = await userManager.FindByIdAsync(userId.ToString());
+            var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm == true).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
-            var post = context.Posts.Where(x => x.PostId == postId);
-            if (post == null) throw new ServiceException("Bài đăng không tồn tại");
+            var post = context.Posts.Where(x => x.PostId == postId && x.ExpireTime < DateTime.Now && x.PostStatus == PostStatusEnum.Accepted);
+            if (post == null) throw new ServiceException("Bài đăng không tồn tại hoặc đã hết hạn");
             if (model.Star < 1 && model.Star > 5) throw new ServiceException("Sao phải lớn hơn hoặc bằng 1 và nhỏ hơn hoặc bằng 5");
             Comment comment = new Comment()
             {

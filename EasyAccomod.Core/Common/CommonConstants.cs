@@ -14,7 +14,10 @@ namespace EasyAccomod.Core.Common
         public const string RENTER = "RENTER";
         public const string NO_TENANTS = "NO_TENANTS";
         public const string HAS_HIRED = "HAS_HIRED";
-        public const string ACCEPTED = "ACCEPTED";
-        public const string REJECTED = "REJECTED";
+        public const string POST_ACCEPTED = "POST_ACCEPTED";
+        public const string POST_REJECTED = "POST_REJECTED";
+        public const string REQUEST_ACCEPTED = "REQUEST_ACCEPTED";
+        public const string REQUEST_REJECTED = "REQUEST_ACCEPTED";
+        public const string REQUEST = "REQUEST";
     }
 }

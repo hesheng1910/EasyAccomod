@@ -1,4 +1,5 @@
-﻿using EasyAccomod.Core.Enums;
+﻿using EasyAccomod.Core.Entities;
+using EasyAccomod.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,14 @@ namespace EasyAccomod.Core.Model.Post
 {
     public class PostViewModel
     {
+        public long PostId { get; set; }
         public string City { get; set; }
         public string District { get; set; }
         public string Street { get; set; }
         /// <summary>
         /// Địa Chỉ ở gần
         /// </summary>
-        public string AddressNearBy { get; set; }
+        public AddressNearBy AddressNearBy { get; set; }
         /// <summary>
         /// Loại Phòng 
         /// </summary>
@@ -27,7 +29,10 @@ namespace EasyAccomod.Core.Model.Post
         /// Diện tích
         /// </summary>
         public double Area { get; set; }
-        public string Infrastructure { get; set; }
+        /// <summary>
+        /// Cở sở vật chất
+        /// </summary>
+        public Infrastructure Infrastructure { get; set; }
         public string Images { get; set; }
         /// <summary>
         /// Thông tin liên hệ
@@ -36,13 +41,18 @@ namespace EasyAccomod.Core.Model.Post
         /// <summary>
         /// Thời gian bài viết có hiệu lực
         /// </summary>
-        public DateTime PublicTime { get; set; }
+        public DateTime ExpireTime { get; set; }
+        /// <summary>
+        /// Thông tin liên lạc lấy từ bảng user
+        /// </summary>
+        public string FullNameOwner { get; set; }
+        public string EmailOwner { get; set; }
         public long TotalLike { get; set; }
         public long TotalView { get; set; }
         /// <summary>
         /// Đã được thuê chưa?
         /// </summary>
         public bool Hired { get; set; }
-        public bool IsConfirm { get; set; }
+        public PostStatusEnum PostStatus { get; set; }
     }
 }

@@ -64,7 +64,9 @@ namespace EasyAccomod.Api.Controllers
         [HttpGet("getconfirm")]
         public IActionResult GetUsersNeedConfirm()
         {
-            return Ok(userService.GetUsersNeedConfirm());
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            return Ok(userService.GetUsersNeedConfirm(accessId));
         }
         /// <summary>
         /// Đăng ký
@@ -117,7 +119,9 @@ namespace EasyAccomod.Api.Controllers
         [HttpPut("confirm")]
         public async Task<IActionResult> ConfirmUser(long userId)
         {
-            var result = await userService.ConfirmUser(userId);
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.ConfirmUser(userId,accessId);
             return Ok(result);
         }
         /// <summary>

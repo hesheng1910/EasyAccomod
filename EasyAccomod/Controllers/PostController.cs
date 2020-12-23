@@ -32,7 +32,7 @@ namespace EasyAccomod.BackendApi.Controllers
             var userId = session.GetString(CommonConstants.USER_SESSION);
             if (userId == null) return Unauthorized();
             model.UserId = Convert.ToInt64(userId);
-            var result = await postService.AddPost(model);
+            var result = await postService.AddPostForMod(model);
             if (result == null) return BadRequest();
             return Ok(result);
         }
@@ -55,6 +55,18 @@ namespace EasyAccomod.BackendApi.Controllers
         public async Task<IActionResult> ConfirmPost(long postId)
         {
             var result = await postService.ConfirmPost(postId);
+            return Ok(result);
+        }
+        [HttpPut("reject")]
+        public async Task<IActionResult> RejectPost(long postId)
+        {
+            var result = await postService.RejectPost(postId);
+            return Ok(result);
+        }
+        [HttpPut("recover")]
+        public async Task<IActionResult> RecoverRejectedPost(long postId)
+        {
+            var result = await postService.RecoverRejectPost(postId);
             return Ok(result);
         }
     }

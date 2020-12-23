@@ -16,11 +16,7 @@ namespace EasyAccomod.Core.Configurations
             builder.Property(x => x.PostId).ValueGeneratedOnAdd();
             builder.Property(x => x.City).HasMaxLength(50).IsRequired();
             builder.Property(x => x.District).HasMaxLength(50).IsRequired();
-            builder.Property(x => x.AddressNearBy).HasMaxLength(200);
-            builder.Property(x => x.Contact).HasMaxLength(200);
-            builder.Property(x => x.AddressNearBy).HasMaxLength(200);
             builder.Property(x => x.Price).IsRequired();
-            builder.Property(x => x.IsConfirm).HasDefaultValue(false);
         }
     }
 }

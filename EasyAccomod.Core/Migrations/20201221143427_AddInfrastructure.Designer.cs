@@ -4,14 +4,16 @@ using EasyAccomod.Core.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EasyAccomod.Core.Migrations
 {
     [DbContext(typeof(EasyAccDbContext))]
-    partial class EasyAccDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201221143427_AddInfrastructure")]
+    partial class AddInfrastructure
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +71,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 1L,
-                            ConcurrencyStamp = "651095e9-2d45-4493-a07f-1e33ac88ca50",
+                            ConcurrencyStamp = "c680b4ee-4b42-4a4f-bb09-a30f3619b0d8",
                             Description = "Adminstrator Role",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
@@ -77,7 +79,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 2L,
-                            ConcurrencyStamp = "252db9c2-e9b6-49dc-a4eb-796abea964d5",
+                            ConcurrencyStamp = "dd0f6791-f67c-4822-bd88-b967646175c0",
                             Description = "Employee Role",
                             Name = "MODERATOR",
                             NormalizedName = "MODERATOR"
@@ -85,7 +87,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 3L,
-                            ConcurrencyStamp = "cdae7706-c6d7-43bc-9747-aafb5b6499fc",
+                            ConcurrencyStamp = "e027c2f7-557e-47a2-9c11-46efcc99330c",
                             Description = "Owner Role",
                             Name = "OWNER",
                             NormalizedName = "MODERATOR"
@@ -93,7 +95,7 @@ namespace EasyAccomod.Core.Migrations
                         new
                         {
                             Id = 4L,
-                            ConcurrencyStamp = "53d83b43-af2f-44f5-82d8-4ed29276151d",
+                            ConcurrencyStamp = "171f35c9-9b6e-460c-a8c0-214f45579a95",
                             Description = "Renter Role",
                             Name = "RENTER",
                             NormalizedName = "RENTER"
@@ -180,14 +182,14 @@ namespace EasyAccomod.Core.Migrations
                             Id = 1L,
                             AccessFailedCount = 0,
                             Address = "Tran Thai Tong",
-                            ConcurrencyStamp = "2b9bc2b7-d632-44cf-bca5-7c5fd2c8469d",
+                            ConcurrencyStamp = "1a9557e0-2ed9-46d3-893a-96e8fe935725",
                             EmailConfirmed = false,
                             FirstName = "Hoa",
                             IsConfirm = true,
                             LastName = "Nguyen",
                             LockoutEnabled = false,
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEOTxQe1S4xaqSNzkbqSPYXUyhzA8dERen6rtUSb+ndMCkZlaxOA2qX8rqlDgvhdMCA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBwlVF2LUTQg9YnTXNG/PEXeMidiy89ypNsBvyenRqYZp73so6h4LhIR215xQWlChg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -356,6 +358,9 @@ namespace EasyAccomod.Core.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<short>("RequsetExtendStatus")
+                        .HasColumnType("smallint");
+
                     b.Property<short>("RoomCategoryId")
                         .HasColumnType("smallint");
 
@@ -407,33 +412,6 @@ namespace EasyAccomod.Core.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Reports");
-                });
-
-            modelBuilder.Entity("EasyAccomod.Core.Entities.RequestExtend", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .UseIdentityColumn();
-
-                    b.Property<decimal>("CostOfExtend")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.Property<short>("RequsetExtendStatus")
-                        .HasColumnType("smallint");
-
-                    b.Property<DateTime>("TimeRequest")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RequestExtends");
                 });
 
             modelBuilder.Entity("EasyAccomod.Core.Entities.RoomCategory", b =>

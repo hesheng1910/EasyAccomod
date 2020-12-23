@@ -10,6 +10,7 @@ using EasyAccomod.Core.Services.Comments;
 using EasyAccomod.Core.Services.Notifications;
 using EasyAccomod.Core.Services.Posts;
 using EasyAccomod.Core.Services.Reports;
+using EasyAccomod.Core.Services.RequestExtends;
 using EasyAccomod.Core.Services.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,7 @@ namespace EasyAccomod.FrontendApi
             services.AddTransient<IReportService, ReportService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IRequestExtendService, RequestExtendService>();
 
             services.AddControllers();
 
