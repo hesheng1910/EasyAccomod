@@ -18,6 +18,9 @@ Web_Project
 dotnet tool install --global dotnet-ef
 
 dotnet ef --project EasyAccomod.Core database update IntialCreate
+dotnet ef --project EasyAccomod.Core database update AddInfrastructure
+dotnet ef --project EasyAccomod.Core database update RequestExtend
+dotnet ef --project EasyAccomod.Core database update DateViewPost
 
 #Đặt EasyAccomod.BackendApi hoặc EasyAccomod.FrontendApi để Run
 
