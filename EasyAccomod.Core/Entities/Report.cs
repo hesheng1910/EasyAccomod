@@ -15,7 +15,8 @@ namespace EasyAccomod.Core.Entities
         /// <summary>
         /// Người dùng nào report
         /// </summary>
-        public long UserId { get; set; }
+        public string UserName { get; set; }
+        public bool IsDelete { get; set; }
         public long PostId { get; set; }
         public Post Post { get; set; }
 

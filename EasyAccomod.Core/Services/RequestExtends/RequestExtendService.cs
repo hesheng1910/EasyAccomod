@@ -28,12 +28,12 @@ namespace EasyAccomod.Core.Services.RequestExtends
             var post = context.Posts.Where(x => x.PostId == model.PostId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại hoặc chưa được confirm");
             var user = userManager.Users.Where(u => u.Id == model.UserId && u.IsConfirm).FirstOrDefault();
-            if ((model.TimeRequest - post.ExpireTime).Days <= 0) throw new ServiceException("Thời gian nhập nhỏ hơn thời hạn đang có của bài đăng");
+            if(model.RequestTime * 7 - (DateTime.Now - post.PublicTime).Days <= 0) throw new ServiceException("Thời gian nhập nhỏ hơn thời hạn đang có của bài đăng");
             RequestExtend requestExtend = new RequestExtend()
             {
                 PostId = model.PostId,
-                CostOfExtend = (model.TimeRequest - post.ExpireTime).Days * 10000,
-                TimeRequest = model.TimeRequest,
+                CostOfExtend = model.RequestTime * 10000,
+                RequestTime = model.RequestTime,
                 RequsetExtendStatus = RequsetExtendStatusEnum.Request,
                 UserName = user.UserName
             };
@@ -49,8 +49,8 @@ namespace EasyAccomod.Core.Services.RequestExtends
         {
             var request = context.RequestExtends.Where(x => x.Id == requestId && x.RequsetExtendStatus == RequsetExtendStatusEnum.Request).FirstOrDefault();
             if (request == null) throw new ServiceException(@"Request không tồn tại hoặc đã được accept/reject");
-            var post = context.Posts.Where(x => x.PostId == request.PostId).FirstOrDefault();
-            post.ExpireTime = request.TimeRequest;
+            var post = context.Posts.Where(x => x.PostId == request.PostId && x.IsDetele == false).FirstOrDefault();
+            post.EffectiveTime +=  request.RequestTime;
             Notification notification = new Notification()
             {
                 Content = CommonConstants.REQUEST_ACCEPTED,
@@ -71,7 +71,7 @@ namespace EasyAccomod.Core.Services.RequestExtends
         {
             var request = context.RequestExtends.Where(x => x.Id == requestId && x.RequsetExtendStatus == RequsetExtendStatusEnum.Request).FirstOrDefault();
             if (request == null) throw new ServiceException(@"Request không tồn tại hoặc đã được accept/reject");
-            var post = context.Posts.Where(x => x.PostId == request.PostId).FirstOrDefault();
+            var post = context.Posts.Where(x => x.PostId == request.PostId && x.IsDetele == false).FirstOrDefault();
             Notification notification = new Notification()
             {
                 Content = CommonConstants.REQUEST_REJECTED,

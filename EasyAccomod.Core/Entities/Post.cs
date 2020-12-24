@@ -48,7 +48,8 @@ namespace EasyAccomod.Core.Entities
         /// <summary>
         /// Thời gian bài viết có hiệu lực
         /// </summary>
-        public DateTime ExpireTime { get; set; }
+        public DateTime PublicTime { get; set; }
+        public int EffectiveTime { get; set; }
         public long TotalLike { get; set; }
         public long TotalView { get; set; }
         /// <summary>

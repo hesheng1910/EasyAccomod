@@ -9,6 +9,6 @@ namespace EasyAccomod.Core.Model.RequestExtend
     {
         public long PostId { get; set; }
         public long UserId { get; set; }
-        public DateTime TimeRequest { get; set; }
+        public int RequestTime { get; set; }
     }
 }

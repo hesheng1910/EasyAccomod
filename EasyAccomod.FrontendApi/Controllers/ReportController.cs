@@ -24,8 +24,9 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddReport(AddReportModel model)
         {
-            model.UserId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
-            var result = await reportService.AddReport(model);
+            var session = HttpContext.Session;
+            var userId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await reportService.AddReport(userId,model);
             if (result == null) return BadRequest();
             return Ok(result);
         }

@@ -4,14 +4,16 @@ using EasyAccomod.Core.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EasyAccomod.Core.Migrations
 {
     [DbContext(typeof(EasyAccDbContext))]
-    partial class EasyAccDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201224082200_FixPost")]
+    partial class FixPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -75,7 +75,7 @@ namespace EasyAccomod.Core.Model.Post
         [Required(ErrorMessage = "AREA_IS_REQUIRED")]
         public double Area { get; set; }
         public string Images { get; set; }
-        public DateTime ExpireTime { get; set; }
+        public int EffectiveTime { get; set; }
         /// <summary>
         /// Đã được thuê chưa?
         /// </summary>

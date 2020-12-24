@@ -83,7 +83,7 @@ namespace EasyAccomod.Core.Model.Post
         /// <summary>
         /// Thời gian bài đăng có hiệu lực
         /// </summary>
-        public DateTime ExpireTime { get; set; }
+        public int EffectiveTime { get; set; }
         /// <summary>
         /// Đã được thuê chưa?
         /// </summary>

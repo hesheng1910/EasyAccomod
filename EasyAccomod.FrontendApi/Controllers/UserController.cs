@@ -20,31 +20,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             this.userService = userService;
         }
-        /// <summary>
-        /// Đăng nhập .Trả về user đã được thêm vào session
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("login")]
-        public async Task<IActionResult> Authencate(LoginModel model)
-        {
-            var result = await userService.Authencate(model);
-            var session = HttpContext.Session;
-            session.SetString(CommonConstants.USER_SESSION, result.ToString());
-            await session.CommitAsync();
-            return Ok(session.GetString(CommonConstants.USER_SESSION));
-        }
-        /// <summary>
-        /// Đăng xuất
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("signout")]
-        public IActionResult SignOut()
-        {
-            HttpContext.Session.Clear();
-            HttpContext.Session.Remove(CommonConstants.USER_SESSION);
-            return Ok();
-        }
+
         /// <summary>
         /// Đăng ký làm chủ trọ
         /// </summary>
@@ -105,7 +81,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpGet("getuserspaging")]
-        public async Task<IActionResult> GetUsersPaging(int pageIndex, int pageSize, string keyword)
+        public async Task<IActionResult> GetUsers(int pageIndex, int pageSize, string keyword)
         {
             var session = HttpContext.Session;
             GetUserPagingModel model = new GetUserPagingModel()

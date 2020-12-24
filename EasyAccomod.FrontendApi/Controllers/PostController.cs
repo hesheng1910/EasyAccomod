@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EasyAccomod.Core.Common;
 using EasyAccomod.Core.Entities;
+using EasyAccomod.Core.Enums;
 using EasyAccomod.Core.Model.Post;
 using EasyAccomod.Core.Services.Posts;
 using Microsoft.AspNetCore.Http;
@@ -112,17 +113,6 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Mod: Từ chối bài đăng
-        /// </summary>
-        /// <param name="postId"></param>
-        /// <returns></returns>
-        [HttpPut("reject")]
-        public async Task<IActionResult> RejectPost(long postId)
-        {
-            var result = await postService.RejectPost(postId);
-            return Ok(result);
-        }
-        /// <summary>
         /// Mod: Xóa những bài đăng request
         /// </summary>
         /// <param name="postId"></param>
@@ -150,35 +140,24 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Mod: Lấy những post cần confirm
+        /// Mod: Lay tat ca cac post
         /// </summary>
         /// <returns></returns>
-        [HttpGet("gettoconfirm")]
-        public IActionResult GetPostsNeedConfirm()
+        [HttpGet("getallformod")]
+        public IActionResult GetAllPostsForMod()
         {
-            var result = postService.GetPostsNeedConfirm();
+            var result = postService.GetAllPostForMod();
             return Ok(result);
         }
         /// <summary>
-        /// Mod: Confirm 
+        /// Mod: Change Status
         /// </summary>
         /// <param name="postId"></param>
         /// <returns></returns>
-        [HttpPut("confirm")]
-        public async Task<IActionResult> ConfirmPost(long postId)
+        [HttpPut("changestatus")]
+        public async Task<IActionResult> ConfirmPost(long postId,PostStatusEnum postStatusEnum)
         {
-            var result = await postService.ConfirmPost(postId);
-            return Ok(result);
-        }
-        /// <summary>
-        /// Mod: Accepted lại các post đã reject
-        /// </summary>
-        /// <param name="postId"></param>
-        /// <returns></returns>
-        [HttpPut("recover")]
-        public async Task<IActionResult> RecoverRejectedPost(long postId)
-        {
-            var result = await postService.RecoverRejectPost(postId);
+            var result = await postService.SetPostStatus(postId,postStatusEnum);
             return Ok(result);
         }
     }

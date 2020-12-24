@@ -11,7 +11,7 @@ namespace EasyAccomod.Core.Entities
         public long Id { get; set; }
         public long PostId { get; set; }
         public string UserName { get; set; }
-        public DateTime TimeRequest { get; set; }
+        public int RequestTime { get; set; }
         public decimal CostOfExtend { get; set; }
         public RequsetExtendStatusEnum RequsetExtendStatus { get; set; }
     }

@@ -22,13 +22,13 @@ namespace EasyAccomod.Core.Services.Reports
             this.userManager = userManager;
         }
 
-        public async Task<Report> AddReport (AddReportModel model)
+        public async Task<Report> AddReport (long userId,AddReportModel model)
         {
-            var post = context.Posts.Where(p => p.ExpireTime < DateTime.Now && p.PostStatus == Enums.PostStatusEnum.Accepted && p.PostId == model.PostId);
+            var post = context.Posts.Where(p => p.PublicTime < DateTime.Now && p.PostStatus == Enums.PostStatusEnum.Accepted && p.PostId == model.PostId);
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             Report report = new Report()
             {
-                UserId = model.UserId,
+                UserName = model.UserName,
                 Reason = model.Reason,
                 PostId = model.PostId
             };
@@ -38,7 +38,7 @@ namespace EasyAccomod.Core.Services.Reports
         }
         public List<Report> GetAllReport()
         {
-            return context.Reports.ToList();
+            return context.Reports.Where(x => x.IsDelete == false).ToList();
         }
     }
 }

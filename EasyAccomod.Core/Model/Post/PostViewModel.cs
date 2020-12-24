@@ -39,14 +39,16 @@ namespace EasyAccomod.Core.Model.Post
         /// </summary>
         public Infrastructure Infrastructure { get; set; }
         public string Images { get; set; }
+        public string UserName { get; set; }
         /// <summary>
         /// Thông tin liên hệ
         /// </summary>
         public string Contact { get; set; }
+        public int EffectiveTime { get; set; }
         /// <summary>
-        /// Thời gian bài viết có hiệu lực
+        /// Thời gian đăng của bài viết 
         /// </summary>
-        public DateTime ExpireTime { get; set; }
+        public DateTime PublicTime { get; set; }
         /// <summary>
         /// Thông tin liên lạc lấy từ bảng user
         /// </summary>

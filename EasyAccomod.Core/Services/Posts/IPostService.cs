@@ -1,4 +1,5 @@
 ﻿using EasyAccomod.Core.Entities;
+using EasyAccomod.Core.Enums;
 using EasyAccomod.Core.Model.Post;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -19,11 +20,9 @@ namespace EasyAccomod.Core.Services.Posts
         Task<Post> UpdateStatusPost(long userId, long postId, bool hired);
         Task<bool> LikePost(long postId, long userId);
         Task<List<PostViewModel>> GetFavouritePosts(long userId);
-        List<PostViewModel> GetPostsNeedConfirm();
-        Task<Post> ConfirmPost(long postId);
-        Task<Post> RejectPost(long postId);
+        List<PostViewModel> GetAllPostForMod();
+        Task<Post> SetPostStatus(long postId,PostStatusEnum postStatusEnum);
         Task<Post> DeletePost(long postId);
-        Task<Post> RecoverRejectPost(long postId);
         List<PostViewModel> SearchPost(SearchPostModel model);
     }
 }
