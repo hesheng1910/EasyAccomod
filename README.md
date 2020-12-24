@@ -25,7 +25,7 @@ dotnet ef --project EasyAccomod.Core database update RequestExtend
 
 dotnet ef --project EasyAccomod.Core database update DateViewPost
 
-dotnet ef --project EasyAccomod.Core migrations add FixPost
+dotnet ef --project EasyAccomod.Core database update FixPost
 
 #Đặt EasyAccomod.BackendApi hoặc EasyAccomod.FrontendApi để Run
 
