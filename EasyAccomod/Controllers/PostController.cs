@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyAccomod.Core.Common;
+using EasyAccomod.Core.Enums;
 using EasyAccomod.Core.Model.Post;
 using EasyAccomod.Core.Services.Posts;
 using Microsoft.AspNetCore.Http;
@@ -48,25 +49,14 @@ namespace EasyAccomod.BackendApi.Controllers
         [HttpGet("gettoconfirm")]
         public IActionResult GetPostsNeedConfirm()
         {
-            var result = postService.GetPostsNeedConfirm();
+            var result = postService.GetAllPostForMod();
             return Ok(result);
         }
-        [HttpPut("confirm")]
-        public async Task<IActionResult> ConfirmPost(long postId)
+
+        [HttpPut("changestatus")]
+        public async Task<IActionResult> SetStatusPost(long postId,PostStatusEnum postStatusEnum)
         {
-            var result = await postService.ConfirmPost(postId);
-            return Ok(result);
-        }
-        [HttpPut("reject")]
-        public async Task<IActionResult> RejectPost(long postId)
-        {
-            var result = await postService.RejectPost(postId);
-            return Ok(result);
-        }
-        [HttpPut("recover")]
-        public async Task<IActionResult> RecoverRejectedPost(long postId)
-        {
-            var result = await postService.RecoverRejectPost(postId);
+            var result = await postService.SetPostStatus(postId,postStatusEnum);
             return Ok(result);
         }
     }

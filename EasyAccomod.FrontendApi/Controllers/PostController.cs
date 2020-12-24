@@ -155,7 +155,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// <param name="postId"></param>
         /// <returns></returns>
         [HttpPut("changestatus")]
-        public async Task<IActionResult> ConfirmPost(long postId,PostStatusEnum postStatusEnum)
+        public async Task<IActionResult> SetPostStatus(long postId,PostStatusEnum postStatusEnum)
         {
             var result = await postService.SetPostStatus(postId,postStatusEnum);
             return Ok(result);

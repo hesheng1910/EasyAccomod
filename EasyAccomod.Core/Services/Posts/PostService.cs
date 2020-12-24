@@ -98,6 +98,7 @@ namespace EasyAccomod.Core.Services.Posts
                 Price = model.Price,
                 Area = model.Area,
                 EffectiveTime = model.EffectiveTime,
+                PublicTime = DateTime.Today,
                 InfrastructureId = context.Infrastructures.OrderBy(x => x.Id).Last().Id,
                 Images = imgs,
                 Hired = model.Hired,
@@ -139,15 +140,17 @@ namespace EasyAccomod.Core.Services.Posts
             if (model.fileimgs.Count() < 3) throw new ServiceException("Cần upload ít nhất 3 ảnh");
             foreach (var img in model.fileimgs)
             {
-                var filePath = @"Content/img/" + img.FileName;
-                var stream = new FileStream(filePath, FileMode.Create);
-                await img.CopyToAsync(stream);
-                imgs += filePath + ";";
+                var filePath = @"Content/img_2/" + img.FileName;
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await img.CopyToAsync(stream);
+                    imgs += filePath + ";";
+                }
             }
             var roomcategory = context.RoomCategories.Where(x => x.RoomCategoryName == model.RoomCategoryName).FirstOrDefault();
             if (roomcategory == null) throw new ServiceException("Loại phòng không tồn tại");
-            if (model.EffectiveTime < 1) throw new ServiceException("Thời gian bài đăng có hiệu lực ít nhất 1 tuần");
             var user = await userManager.FindByIdAsync(model.UserId.ToString());
+            if (model.EffectiveTime < 1) throw new ServiceException("Thời gian bài đăng có hiệu lực ít nhất 1 tuần");
             Infrastructure infrastructure = new Infrastructure()
             {
                 AirCond = model.AirCond,
@@ -182,28 +185,30 @@ namespace EasyAccomod.Core.Services.Posts
                 Education = education,
                 BusStation = busstation
             };
+            await context.AddressNearBies.AddAsync(addressNearBy);
+            await context.SaveChangesAsync();
             Post post = new Post()
             {
                 UserId = model.UserId,
                 City = model.City,
                 District = model.District,
-                Commune = model.Commune,
                 Street = model.Street,
+                Commune = model.Commune,
                 Rooms = model.Rooms,
                 AddressNearById = context.AddressNearBies.OrderBy(x => x.Id).Last().Id,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
                 Area = model.Area,
+                EffectiveTime = model.EffectiveTime,
+                PublicTime = DateTime.Today,
                 InfrastructureId = context.Infrastructures.OrderBy(x => x.Id).Last().Id,
                 Images = imgs,
                 Hired = model.Hired,
-                EffectiveTime = model.EffectiveTime,
                 TotalLike = 0,
                 TotalView = 0,
                 PostStatus = PostStatusEnum.Accepted
-
             };
-            await context.Infrastructures.AddAsync(infrastructure);
+
             await context.Posts.AddAsync(post);
             await context.SaveChangesAsync();
             PostViewModel postVM = new PostViewModel()
@@ -213,8 +218,8 @@ namespace EasyAccomod.Core.Services.Posts
                 District = model.District,
                 Commune = model.Commune,
                 Street = model.Street,
-                Rooms = model.Rooms,
                 AddressNearBy = addressNearBy,
+                Rooms = model.Rooms,
                 RoomCategoryId = (RoomCategoryEnum)roomcategory.Id,
                 Price = model.Price,
                 Area = model.Area,
@@ -339,7 +344,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.TotalLike,
                                                         i.TotalView,
                                                         i.WithOwner
-                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && p.PublicTime != null);
+                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && ((DateTime.Today - p.PublicTime).Days < p.EffectiveTime * 7));
             List<PostViewModel> models = new List<PostViewModel>();
             foreach(var post in posts)
             {
@@ -594,7 +599,7 @@ namespace EasyAccomod.Core.Services.Posts
             if ((int)model.Kitchen < 1 && (int)model.Kitchen > 3) throw new ServiceException("Nhập loại bếp không đúng");
             foreach (var img in model.fileimgs)
             {
-                var filePath = @"Content/img/" + img.FileName;
+                var filePath = @"Content/img_2/" + img.FileName;
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await img.CopyToAsync(stream);

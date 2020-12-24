@@ -80,18 +80,12 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [HttpGet("getuserspaging")]
-        public async Task<IActionResult> GetUsers(int pageIndex, int pageSize, string keyword)
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetAllUsers()
         {
             var session = HttpContext.Session;
-            GetUserPagingModel model = new GetUserPagingModel()
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Keyword = keyword,
-                AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION))
-            };
-            var result = await userService.GetUsersPaging(model);
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.GetAllUsers(accessId);
             if (result == null) BadRequest();
             return Ok(result);
         }

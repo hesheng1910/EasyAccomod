@@ -15,7 +15,7 @@ namespace EasyAccomod.Core.Services.User
         Task<long> Authencate(LoginModel model);
         Task<AppUser> Delete(long id, long accessId);
         Task<UserViewModel> GetById(long id,long userId);
-        Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingModel model);
+        Task<List<AppUser>> GetAllUsers(long accessId);
         Task<IList<string>> RoleAssign(RoleAssignModel model);
         Task<AppUser> Update(long userId, UserUpdateModel model);
         Task<List<AppUser>> GetUsersNeedConfirm(long accessId);

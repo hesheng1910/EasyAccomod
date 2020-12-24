@@ -93,41 +93,11 @@ namespace EasyAccomod.Core.Services.User
             return userVm;
         }
 
-        public async Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingModel model)
+        public async Task<List<AppUser>> GetAllUsers(long accessId)
         {
-            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
-            var query = _userManager.Users;
-            if (!string.IsNullOrEmpty(model.Keyword))
-            {
-                query = query.Where(x => x.UserName.Contains(model.Keyword)
-                 || x.PhoneNumber.Contains(model.Keyword));
-            }
-
-            //Paging
-            int totalRow = await query.CountAsync();
-
-            var data = await query.Skip((model.PageIndex - 1) * model.PageSize)
-                .Take(model.PageSize)
-                .Select(x => new UserViewModel()
-                {
-                    Email = x.Email,
-                    PhoneNumber = x.PhoneNumber,
-                    UserName = x.UserName,
-                    FirstName = x.FirstName,
-                    Id = x.Id,
-                    LastName = x.LastName
-                }).ToListAsync();
-
-            //Select and projection
-            var pagedResult = new PagedResult<UserViewModel>()
-            {
-                TotalRecords = totalRow,
-                PageIndex = model.PageIndex,
-                PageSize = model.PageSize,
-                Items = data
-            };
-            return pagedResult;
+            return _userManager.Users.ToList();
         }
 
         public async Task<AppUser> Register(RegisterModel model)
@@ -239,8 +209,6 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<AppUser> ConfirmUser(long userId,long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false)
-                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null || user.IsConfirm) throw new ServiceException("Nguoi dung khong ton tai hoac da duoc confirm");
             user.IsConfirm = true;
