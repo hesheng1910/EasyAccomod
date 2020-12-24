@@ -29,6 +29,8 @@ namespace EasyAccomod.FrontendApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,6 +41,16 @@ namespace EasyAccomod.FrontendApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:9999",
+                                                          "http://localhost:3000");
+                                  });
+            });
+
             services.AddDbContext<EasyAccDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("EasyAccomodDb")));
 
@@ -83,6 +95,8 @@ namespace EasyAccomod.FrontendApi
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseRouting();
 
