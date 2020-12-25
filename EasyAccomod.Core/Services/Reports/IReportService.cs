@@ -11,5 +11,6 @@ namespace EasyAccomod.Core.Services.Reports
     {
         Task<Report> AddReport(long userId,AddReportModel model);
         List<Report> GetAllReport();
+        Task<bool> DeleteReport(long reportId);
     }
 }

@@ -12,9 +12,11 @@ namespace EasyAccomod.Core.Services.User
     {
         Task<AppUser> Register(RegisterModel model);
         Task<AppUser> RegisterForRenter(RegisterModel model);
-        Task<long> Authencate(LoginModel model);
+        Task<AuthenResult> Authencate(LoginModel model);
         Task<AppUser> Delete(long id, long accessId);
         Task<UserViewModel> GetById(long id,long userId);
+        Task<UserViewModel> GetByAccessId(long accessId);
+        Task<bool> ChangePassword(long accessId, ChangePasswordModel model);
         Task<List<AppUser>> GetAllUsers(long accessId);
         Task<IList<string>> RoleAssign(RoleAssignModel model);
         Task<AppUser> Update(long userId, UserUpdateModel model);

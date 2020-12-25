@@ -30,7 +30,8 @@ namespace EasyAccomod.Core.Services.Reports
             {
                 UserName = model.UserName,
                 Reason = model.Reason,
-                PostId = model.PostId
+                PostId = model.PostId,
+                IsDelete = false
             };
             await context.Reports.AddAsync(report);
             await context.SaveChangesAsync();
@@ -39,6 +40,16 @@ namespace EasyAccomod.Core.Services.Reports
         public List<Report> GetAllReport()
         {
             return context.Reports.Where(x => x.IsDelete == false).ToList();
+        }
+        public async Task<bool> DeleteReport(long reportId)
+        {
+            var report = context.Reports.Where(x => x.ReportId == reportId && x.IsDelete == false).FirstOrDefault();
+            if (report == null) throw new ServiceException("Report khong ton tai");
+            report.IsDelete = true;
+            var result = await context.SaveChangesAsync();
+            if(result != 0)
+                return true;
+            return false;
         }
     }
 }

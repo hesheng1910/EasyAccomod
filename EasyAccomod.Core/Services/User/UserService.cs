@@ -42,7 +42,7 @@ namespace EasyAccomod.Core.Services.User
 
             return await _userManager.IsInRoleAsync(user, role);
         }
-        public async Task<long> Authencate(LoginModel model)
+        public async Task<AuthenResult> Authencate(LoginModel model)
         {
             var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại hoặc chưa được confirm");
@@ -52,7 +52,12 @@ namespace EasyAccomod.Core.Services.User
             {
                 throw new ServiceException ("Đăng nhập không đúng");
             }
-            return user.Id ; // Tra ve user Id
+            AuthenResult authenResult = new AuthenResult()
+            {
+                UserId = user.Id,
+                Roles = await _userManager.GetRolesAsync(user)
+            };
+            return authenResult;
         }
         public async Task<AppUser> Delete(long id,long accessId)
         {
@@ -74,7 +79,27 @@ namespace EasyAccomod.Core.Services.User
         {
             if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = _userManager.Users.Where(x => x.Id == id && x.IsConfirm).FirstOrDefault();
+            if (user == null)
+            {
+                throw new ServiceException("User không tồn tại");
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            var userVm = new UserViewModel()
+            {
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                Id = user.Id,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Roles = roles
+            };
+            return userVm;
+        }
+        public async Task<UserViewModel> GetByAccessId(long accessId)
+        {
+            var user = _userManager.Users.Where(x => x.Id == accessId && x.IsConfirm).FirstOrDefault();
             if (user == null)
             {
                 throw new ServiceException("User không tồn tại");
@@ -95,7 +120,7 @@ namespace EasyAccomod.Core.Services.User
 
         public async Task<List<AppUser>> GetAllUsers(long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false && await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             return _userManager.Users.ToList();
         }
@@ -132,10 +157,10 @@ namespace EasyAccomod.Core.Services.User
         public async Task<AppUser> RegisterForRenter(RegisterModel model)
         {
             // Kiem tra xem nguoi dung da ton tai chua
-            var user = await _userManager.FindByNameAsync(model.UserName);
+            var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm);
             if (user != null) throw new ServiceException("User's already exist");
             // Kiem tra xem email da ton tai chua
-            if (await _userManager.FindByEmailAsync(model.Email) != null) throw new ServiceException("Email's already exist");
+            if (_userManager.Users.Where(x => x.Email == model.Email && x.IsConfirm) != null) throw new ServiceException("Email's already exist");
             var appUser = new AppUser()
             {
                 UserName = model.UserName,
@@ -158,8 +183,8 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<IList<string>> RoleAssign(RoleAssignModel model)
         {
-            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
-                throw new ServiceException("Tài khoản không có quyền truy cập");
+            /*if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");*/
             var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null)
             {
@@ -206,6 +231,16 @@ namespace EasyAccomod.Core.Services.User
                 return user;
             }
             return null;
+        }
+        public async Task<bool> ChangePassword(long accessId,ChangePasswordModel model)
+        {
+            var user = _userManager.Users.Where(x => x.Id == accessId && x.IsConfirm).FirstOrDefault();
+            if (user == null && user.UserName != model.UserName) throw new ServiceException("Tài khoản không tồn tại hoặc bạn chưa đăng nhập");
+            if (await _userManager.CheckPasswordAsync(user, model.CurPassword) == false) throw new ServiceException("Mật khẩu hiện tại nhập không đúng");
+            var result = await _userManager.ChangePasswordAsync(user, model.CurPassword, model.NewPassword);
+            if (result.Succeeded)
+                return true;
+            return false;
         }
         public async Task<AppUser> ConfirmUser(long userId,long accessId)
         {

@@ -39,5 +39,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(reportService.GetAllReport());
         }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteReport(long reportId)
+        {
+
+            return Ok(await reportService.DeleteReport(reportId));
+        }
     }
 }

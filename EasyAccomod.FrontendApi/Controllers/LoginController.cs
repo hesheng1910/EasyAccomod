@@ -30,9 +30,9 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             var result = await userService.Authencate(model);
             var session = HttpContext.Session;
-            session.SetString(CommonConstants.USER_SESSION, result.ToString());
+            session.SetString(CommonConstants.USER_SESSION, result.UserId.ToString());
             await session.CommitAsync();
-            return Ok(session.GetString(CommonConstants.USER_SESSION));
+            return Ok(result.Roles);
         }
         [HttpGet("check")]
         public IActionResult CheckAuthencate()

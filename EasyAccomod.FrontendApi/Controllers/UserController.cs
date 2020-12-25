@@ -76,6 +76,34 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         /// <summary>
+        /// Lấy ra thông tin tài khoản người đang truy cập
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("getbyaccessId")]
+        public async Task<IActionResult> GetByAccessId()
+        {
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.GetByAccessId(accessId);
+            if (result == null) BadRequest();
+
+            return Ok(result);
+        }
+        /// <summary>
+        /// Thay đổi mật khẩu
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("changepassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.ChangePassword(accessId, model);
+            return Ok(result);
+        }
+        /// <summary>
         /// Lấy ra danh sách người dùng
         /// </summary>
         /// <param name="model"></param>

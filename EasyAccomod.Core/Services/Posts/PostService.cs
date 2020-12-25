@@ -125,6 +125,7 @@ namespace EasyAccomod.Core.Services.Posts
                 Images = imgs,
                 Hired = model.Hired,
                 Contact = user.PhoneNumber,
+                UserName = user.UserName,
                 FullNameOwner = user.LastName + " " + user.FirstName,
                 EmailOwner = user.Email,
                 EffectiveTime = model.EffectiveTime,
@@ -227,6 +228,7 @@ namespace EasyAccomod.Core.Services.Posts
                 Images = imgs,
                 Hired = model.Hired,
                 Contact = user.PhoneNumber,
+                UserName = user.UserName,
                 FullNameOwner = user.LastName + " " + user.FirstName,
                 EmailOwner = user.Email,
                 EffectiveTime = model.EffectiveTime,
@@ -327,6 +329,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         u.LastName,
                                                         u.FirstName,
                                                         u.Email,
+                                                        u.UserName,
                                                         i.Area,
                                                         i.City,
                                                         i.Description,
@@ -344,7 +347,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.TotalLike,
                                                         i.TotalView,
                                                         i.WithOwner
-                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && ((DateTime.Today - p.PublicTime).Days < p.EffectiveTime * 7));
+                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted);
             List<PostViewModel> models = new List<PostViewModel>();
             foreach(var post in posts)
             {
@@ -380,6 +383,7 @@ namespace EasyAccomod.Core.Services.Posts
                     Hired = post.Hired,
                     Infrastructure = infrastructure,
                     Contact = post.PhoneNumber,
+                    UserName = post.UserName,
                     FullNameOwner = post.LastName + " " + post.FirstName,
                     EmailOwner = post.Email,
                     EffectiveTime = post.EffectiveTime,
@@ -484,6 +488,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         u.LastName,
                                                         u.FirstName,
                                                         u.Email,
+                                                        u.UserName,
                                                         i.Area,
                                                         i.City,
                                                         i.Description,
@@ -537,6 +542,7 @@ namespace EasyAccomod.Core.Services.Posts
                     Hired = post.Hired,
                     Infrastructure = infrastructure,
                     Contact = post.PhoneNumber,
+                    UserName = post.UserName,
                     FullNameOwner = post.LastName + " " + post.FirstName,
                     EmailOwner = post.Email,
                     EffectiveTime = post.EffectiveTime,
@@ -554,7 +560,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<PostViewModel> ViewPost(long postId)
         {
-            var post = context.Posts.Where(x => x.PostId == postId && (DateTime.Today - x.PublicTime).Days < x.EffectiveTime * 7 && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
+            var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             var user = userManager.Users.Where(x => x.Id == post.UserId && x.IsConfirm).FirstOrDefault();
             var infrastructure = context.Infrastructures.Where(x => x.Id == post.InfrastructureId).FirstOrDefault();
@@ -574,6 +580,7 @@ namespace EasyAccomod.Core.Services.Posts
                 Hired = post.Hired,
                 Infrastructure = infrastructure,
                 Contact = user.PhoneNumber,
+                UserName = user.UserName,
                 FullNameOwner = user.LastName + " " + user.FirstName,
                 EmailOwner = user.Email,
                 EffectiveTime = post.EffectiveTime,
@@ -665,6 +672,7 @@ namespace EasyAccomod.Core.Services.Posts
                 Hired = post.Hired,
                 Infrastructure = infrastructure,
                 Contact = user.PhoneNumber,
+                UserName = user.UserName,
                 FullNameOwner = user.LastName + " " + user.FirstName,
                 EmailOwner = user.Email,
                 EffectiveTime = post.EffectiveTime,
@@ -679,7 +687,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<Post> UpdateStatusPost(long userId, long postId, bool hired)
         {
-            var post = context.Posts.Where(x => x.PostId == postId && (DateTime.Today - x.PublicTime).Days < x.EffectiveTime * 7 && x.PostStatus == PostStatusEnum.Accepted && x.UserId == userId).FirstOrDefault();
+            var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted && x.UserId == userId).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm).FirstOrDefault();
             post.Hired = hired;
@@ -702,7 +710,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<bool> LikePost(long postId,long userId)
         {
-            var post = context.Posts.Where(x => x.PostId == postId && (DateTime.Today - x.PublicTime).Days < x.EffectiveTime * 7 && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
+            var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
@@ -819,6 +827,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         u.PhoneNumber,
                                                         u.LastName,
                                                         u.FirstName,
+                                                        u.UserName,
                                                         u.Email,
                                                         i.Area,
                                                         i.City,
@@ -850,6 +859,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.WaterHeater,
                                                         i.WaterPrice,
                                                         i.Medical,
+                                                        i.UserName,
                                                         i.BusStation,
                                                         i.Education,
                                                         i.PhoneNumber,
@@ -857,6 +867,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.LastName,
                                                         i.FirstName,
                                                         i.Commune,
+                                                        
                                                         i.Email,
                                                         i.Area,
                                                         i.City,
@@ -876,7 +887,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.TotalView,
                                                         i.WithOwner,
                                                         UserRenterId = u.UserId
-                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && p.UserRenterId == userId && (DateTime.Today - p.PublicTime).Days < p.EffectiveTime * 7);
+                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && p.UserRenterId == userId);
             List<PostViewModel> models = new List<PostViewModel>();
             foreach (var post in posts)
             {
@@ -912,6 +923,7 @@ namespace EasyAccomod.Core.Services.Posts
                     Hired = post.Hired,
                     Infrastructure = infrastructure,
                     Contact = post.PhoneNumber,
+                    UserName = post.UserName,
                     FullNameOwner = post.LastName + " " + post.FirstName,
                     EmailOwner = post.Email,
                     EffectiveTime = post.EffectiveTime,
@@ -1041,6 +1053,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.Medical,
                                                         i.BusStation,
                                                         i.Education,
+                                                        u.UserName,
                                                         u.PhoneNumber,
                                                         u.LastName,
                                                         u.FirstName,
@@ -1098,6 +1111,7 @@ namespace EasyAccomod.Core.Services.Posts
                     Hired = post.Hired,
                     Infrastructure = infrastructure,
                     Contact = post.PhoneNumber,
+                    UserName = post.UserName,
                     FullNameOwner = post.LastName + " " + post.FirstName,
                     EmailOwner = post.Email,
                     EffectiveTime = post.EffectiveTime,
@@ -1210,6 +1224,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         u.PhoneNumber,
                                                         u.LastName,
                                                         u.FirstName,
+                                                        u.UserName,
                                                         u.Email,
                                                         i.Area,
                                                         i.City,
@@ -1228,7 +1243,7 @@ namespace EasyAccomod.Core.Services.Posts
                                                         i.TotalLike,
                                                         i.TotalView,
                                                         i.WithOwner
-                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted && (DateTime.Today - p.PublicTime).Days < p.EffectiveTime * 7);
+                                                    }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted);
 
             if (model.City != null)
             {
@@ -1257,6 +1272,14 @@ namespace EasyAccomod.Core.Services.Posts
             if (model.Fridge == true)
                 searchResult = searchResult.Where(x => x.Fridge == model.Fridge);
             searchResult = searchResult.Where(x => x.Kitchen == model.Kitchen);
+            if(model.MaxPrice != 0)
+            {
+                searchResult = searchResult.Where(x => x.Price < model.MaxPrice);
+            }
+            if (model.MinPrice != 0)
+            {
+                searchResult = searchResult.Where(x => x.Price < model.MinPrice);
+            }
             List<PostViewModel> models = new List<PostViewModel>();
             foreach (var post in searchResult)
             {
@@ -1292,6 +1315,7 @@ namespace EasyAccomod.Core.Services.Posts
                     Hired = post.Hired,
                     Infrastructure = infrastructure,
                     Contact = post.PhoneNumber,
+                    UserName = post.UserName,
                     FullNameOwner = post.LastName + " " + post.FirstName,
                     EmailOwner = post.Email,
                     EffectiveTime = post.EffectiveTime,
