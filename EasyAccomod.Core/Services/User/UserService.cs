@@ -42,7 +42,7 @@ namespace EasyAccomod.Core.Services.User
 
             return await _userManager.IsInRoleAsync(user, role);
         }
-        public async Task<AuthenResult> Authencate(LoginModel model)
+        public async Task<UserViewModel> Authencate(LoginModel model)
         {
             var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại hoặc chưa được confirm");
@@ -52,12 +52,17 @@ namespace EasyAccomod.Core.Services.User
             {
                 throw new ServiceException ("Đăng nhập không đúng");
             }
-            AuthenResult authenResult = new AuthenResult()
+            UserViewModel viewModel = new UserViewModel()
             {
-                UserId = user.Id,
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UserName = user.UserName,
                 Roles = await _userManager.GetRolesAsync(user)
             };
-            return authenResult;
+            return viewModel;
         }
         public async Task<AppUser> Delete(long id,long accessId)
         {
@@ -183,32 +188,19 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<IList<string>> RoleAssign(RoleAssignModel model)
         {
-            /*if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
-                throw new ServiceException("Tài khoản không có quyền truy cập");*/
+            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null)
             {
                 throw new ServiceException("User doesn't exist");
             }
-            var removedRoles = model.Roles.Where(x => x.Selected == false).Select(x => x.Name).ToList();
-            foreach (var roleName in removedRoles)
-            {
-                if (await _userManager.IsInRoleAsync(user, roleName) == true)
-                {
-                    await _userManager.RemoveFromRoleAsync(user, roleName);
-                }
-            }
-            await _userManager.RemoveFromRolesAsync(user, removedRoles);
-
-            var addedRoles = model.Roles.Where(x => x.Selected).Select(x => x.Name).ToList();
-            foreach (var roleName in addedRoles)
-            {
-                Console.WriteLine(roleName);
-                if (await _userManager.IsInRoleAsync(user, roleName) == false)
-                {
-                    await _userManager.AddToRoleAsync(user, roleName);
-                }
-            }
+            var role = await _roleManager.FindByNameAsync(model.Role);
+            if (role == null) throw new ServiceException("Role không tồn tại");
+            var roleInUser = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+            if(roleInUser != null)
+                await _userManager.RemoveFromRoleAsync(user,roleInUser);
+            await _userManager.AddToRoleAsync(user,model.Role);
             return await _userManager.GetRolesAsync(user);
         }
         public async Task<AppUser> Update(long userId, UserUpdateModel model)

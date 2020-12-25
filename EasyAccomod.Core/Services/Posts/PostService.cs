@@ -590,6 +590,12 @@ namespace EasyAccomod.Core.Services.Posts
                 PostStatus = post.PostStatus,
                 RoomCategoryId = post.RoomCategoryId
             };
+            DateViewPost dateViewPost = new DateViewPost()
+            {
+                PostId = post.PostId,
+                ViewDate = DateTime.Today
+            };
+            await context.AddAsync(dateViewPost);
             post.TotalView += 1;
             context.Posts.Update(post);
             await context.SaveChangesAsync();

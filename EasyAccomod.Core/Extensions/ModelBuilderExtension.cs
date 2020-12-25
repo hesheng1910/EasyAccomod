@@ -31,7 +31,7 @@ namespace EasyAccomod.Core.Extensions
                                 {
                                     Id = 3,
                                     Name = "OWNER",
-                                    NormalizedName = "MODERATOR",
+                                    NormalizedName = "OWNER",
                                     Description = "Owner Role"
                                 },
                                 new AppRole()
