@@ -47,7 +47,7 @@ namespace EasyAccomod.FrontendApi
                                   builder =>
                                   {
                                       builder.WithOrigins("http://localhost:9999",
-                                                          "http://localhost:3000");
+                                                          "http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
                                   });
             });
 
