@@ -90,6 +90,16 @@ namespace EasyAccomod.FrontendApi.Controllers
 
             return Ok(result);
         }
+        [HttpGet("getowners")]
+        public async Task<IActionResult> GetOwners()
+        {
+            var session = HttpContext.Session;
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.GetOwners(accessId);
+            if (result == null) BadRequest();
+
+            return Ok(result);
+        }
         /// <summary>
         /// Thay đổi mật khẩu
         /// </summary>

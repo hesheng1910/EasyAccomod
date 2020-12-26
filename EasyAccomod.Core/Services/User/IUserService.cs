@@ -16,8 +16,9 @@ namespace EasyAccomod.Core.Services.User
         Task<AppUser> Delete(long id, long accessId);
         Task<UserViewModel> GetById(long id,long userId);
         Task<UserViewModel> GetByAccessId(long accessId);
+        Task<List<UserViewModel>> GetOwners(long accessId);
         Task<bool> ChangePassword(long accessId, ChangePasswordModel model);
-        Task<List<AppUser>> GetAllUsers(long accessId);
+        Task<List<UserViewModel>> GetAllUsers(long accessId);
         Task<IList<string>> RoleAssign(RoleAssignModel model);
         Task<AppUser> Update(long userId, UserUpdateModel model);
         Task<List<AppUser>> GetUsersNeedConfirm(long accessId);
