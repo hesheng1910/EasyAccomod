@@ -17,7 +17,7 @@ namespace EasyAccomod.Core.Common
         public const string POST_ACCEPTED = "POST_ACCEPTED";
         public const string POST_REJECTED = "POST_REJECTED";
         public const string REQUEST_ACCEPTED = "REQUEST_ACCEPTED";
-        public const string REQUEST_REJECTED = "REQUEST_ACCEPTED";
+        public const string REQUEST_REJECTED = "REQUEST_REJECTED";
         public const string REQUEST = "REQUEST";
     }
 }

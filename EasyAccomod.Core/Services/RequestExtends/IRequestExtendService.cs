@@ -14,6 +14,7 @@ namespace EasyAccomod.Core.Services.RequestExtends
         List<RequestExtend> GetPostsRequestExtend();
         Task<Post> ConfirmRequestExtend(long requestId);
         Task<Post> RejectRequestExtend(long requestId);
+        Task<RequestExtend> DeleteRequestExtend(long requestId);
 
     }
 }

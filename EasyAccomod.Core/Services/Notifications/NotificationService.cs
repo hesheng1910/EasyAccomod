@@ -1,4 +1,5 @@
-﻿using EasyAccomod.Core.EF;
+﻿using AGID.Core.Exceptions;
+using EasyAccomod.Core.EF;
 using EasyAccomod.Core.Entities;
 using EasyAccomod.Core.Model.Notification;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,15 @@ namespace EasyAccomod.Core.Services.Notifications
         {
             this.context = context;
             this.userManager = userManager;
+        }
+
+        public async Task<Notification> DeleteNotification(long notifId)
+        {
+            var notif = await context.Notifications.FindAsync(notifId);
+            if (notif == null) throw new ServiceException("Thong bao khong ton tai");
+            context.Notifications.Remove(notif);
+            await context.SaveChangesAsync();
+            return notif;
         }
 
         public List<Notification> GetNotificationForMod()

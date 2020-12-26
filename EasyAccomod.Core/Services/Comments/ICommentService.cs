@@ -13,5 +13,6 @@ namespace EasyAccomod.Core.Services.Comments
         Task<List<Comment>> GetCommentByPostId(long postId);
         List<Comment> GetCommentsNeedConfirm();
         Task<Comment> ConfirmComment(long cmtId);
+        Task<Comment> DeleteComment(long cmtId);
     }
 }

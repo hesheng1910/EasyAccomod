@@ -16,6 +16,6 @@ namespace EasyAccomod.Core.Model.AppUser
         public string IdentityNumber { get; set; }
         public string Email { get; set; }
         public bool IsConfirm { get; set; }
-        public IList<string> Roles { get; set; }
+        public string Role { get; set; }
     }
 }

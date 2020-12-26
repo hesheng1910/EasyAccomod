@@ -58,5 +58,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(await commentService.ConfirmComment(cmtId));
         }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteComment(long cmtId)
+        {
+            return Ok(await commentService.DeleteComment(cmtId));
+        }
     }
 }

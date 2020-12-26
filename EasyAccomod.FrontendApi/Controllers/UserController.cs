@@ -55,7 +55,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> Update(long userId, UserUpdateModel model)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
+            userId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            
             var result = await userService.Update(userId, model);
             if (result == null) BadRequest();
             return Ok(result);
@@ -84,6 +87,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> GetByAccessId()
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.GetByAccessId(accessId);
             if (result == null) BadRequest();
@@ -94,6 +98,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> GetOwners()
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.GetOwners(accessId);
             if (result == null) BadRequest();
@@ -109,6 +114,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.ChangePassword(accessId, model);
             return Ok(result);
@@ -122,6 +128,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.GetAllUsers(accessId);
             if (result == null) BadRequest();
@@ -135,6 +142,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public IActionResult GetUsersNeedConfirm()
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             return Ok(userService.GetUsersNeedConfirm(accessId));
         }
@@ -147,6 +155,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> RoleAssign(RoleAssignModel model)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.RoleAssign(model);
             if (result == null) BadRequest();
@@ -162,6 +171,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> UpdateForAdmin(long userId, UserUpdateModel model)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             model.AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.Update(userId, model);
             if (result == null) BadRequest();
@@ -176,6 +186,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> ConfirmUser(long userId)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.ConfirmUser(userId, accessId);
             return Ok(result);
@@ -189,6 +200,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> Delete(long id)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.Delete(id, accessId);
             if (result == null) BadRequest();

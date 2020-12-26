@@ -8,7 +8,6 @@ namespace EasyAccomod.Core.Model.AppUser
 {
     public class UserUpdateModel
     {
-        public long Id { get; set; }
         /// <summary>
         /// Tên
         /// </summary>
@@ -35,6 +34,7 @@ namespace EasyAccomod.Core.Model.AppUser
         /// </summary>
         [Required(ErrorMessage = "ADDRESS_IS_REQUIRED")]
         public string Address { get; set; }
+        public string IdentityNumber { get; set; }
         public long AccessId { get; set; }
     }
 }

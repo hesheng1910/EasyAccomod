@@ -88,5 +88,14 @@ namespace EasyAccomod.Core.Services.RequestExtends
             await context.SaveChangesAsync();
             return post;
         }
+
+        public async Task<RequestExtend> DeleteRequestExtend(long requestId)
+        {
+            var request = context.RequestExtends.Where(x => x.Id == requestId).FirstOrDefault();
+            if (request == null) throw new ServiceException(@"Request không tồn tại hoặc đã được accept/reject");
+            context.RequestExtends.Remove(request);
+            await context.SaveChangesAsync();
+            return request;
+        }
     }
 }

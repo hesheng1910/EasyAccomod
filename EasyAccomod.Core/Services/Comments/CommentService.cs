@@ -68,5 +68,14 @@ namespace EasyAccomod.Core.Services.Comments
         {
             return context.Comments.Where(x => x.IsConfirm == false).ToList();
         }
+
+        public async Task<Comment> DeleteComment(long cmtId)
+        {
+            var comment = await context.Comments.FindAsync(cmtId);
+            if (comment == null) throw new ServiceException("Comment khong ton tai");
+            context.Comments.Remove(comment);
+            await context.SaveChangesAsync();
+            return comment;
+        }
     }
 }

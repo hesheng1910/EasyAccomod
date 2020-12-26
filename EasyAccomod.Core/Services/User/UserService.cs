@@ -63,11 +63,11 @@ namespace EasyAccomod.Core.Services.User
                 Address = user.Address,
                 IdentityNumber = user.IdentityNumber,
                 IsConfirm = user.IsConfirm,
-                Roles = await _userManager.GetRolesAsync(user)
+                Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
             };
             return viewModel;
         }
-        public async Task<AppUser> Delete(long id,long accessId)
+        public async Task<UserViewModel> Delete(long id,long accessId)
         {
             if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
@@ -79,7 +79,24 @@ namespace EasyAccomod.Core.Services.User
             }
             var reult = await _userManager.DeleteAsync(user);
             if (reult.Succeeded)
-                return user;
+            {
+            var roles = await _userManager.GetRolesAsync(user);
+            var userVm = new UserViewModel()
+            {
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                Id = user.Id,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Address = user.Address,
+                IdentityNumber = user.IdentityNumber,
+                IsConfirm = user.IsConfirm,
+                Role = roles.FirstOrDefault()
+            };
+            return userVm;
+            }    
+               
             return null;
         }
 
@@ -104,7 +121,7 @@ namespace EasyAccomod.Core.Services.User
                 Address = user.Address,
                 IdentityNumber = user.IdentityNumber,
                 IsConfirm = user.IsConfirm,
-                Roles = roles
+                Role = roles.FirstOrDefault()
             };
             return userVm;
         }
@@ -131,7 +148,7 @@ namespace EasyAccomod.Core.Services.User
                     Address = user.Address,
                     IdentityNumber = user.IdentityNumber,
                     IsConfirm = user.IsConfirm,
-                    Roles = roles
+                    Role = roles.FirstOrDefault()
                 };
                 }
               
@@ -157,7 +174,7 @@ namespace EasyAccomod.Core.Services.User
                 Address = user.Address,
                 IdentityNumber = user.IdentityNumber,
                 IsConfirm = user.IsConfirm,
-                Roles = roles
+                Role = roles.FirstOrDefault()
             };
             return userVm;
         }
@@ -181,20 +198,20 @@ namespace EasyAccomod.Core.Services.User
                     IsConfirm = user.IsConfirm,
                     LastName = user.LastName,
                     PhoneNumber = user.PhoneNumber,
-                    Roles = roles
+                    Role = roles.FirstOrDefault()
                 };
                 userViewModels.Add(userViewModel);
             }
             return userViewModels;
         }
-        public async Task<AppUser> Register(RegisterModel model)
+        public async Task<UserViewModel> Register(RegisterModel model)
         {
-            bool isConfirm = true;
             // Kiem tra xem nguoi dung da ton tai chua
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user != null) throw new ServiceException("User's already exist");
+            if (user != null ) throw new ServiceException("User's already exist");
             // Kiem tra xem email da ton tai chua
-            if (await _userManager.FindByEmailAsync(model.Email) != null) throw new ServiceException("Email's already exist");
+            var user2 = await _userManager.FindByEmailAsync(model.Email);
+            if (user2 != null) throw new ServiceException("Email's already exist");
             var appUser = new AppUser()
             {
                 UserName = model.UserName,
@@ -211,18 +228,31 @@ namespace EasyAccomod.Core.Services.User
             await _userManager.AddToRoleAsync(appUser, CommonConstants.OWNER);
             if (result.Succeeded)
             {
-                return appUser;
+                var roles = await _userManager.GetRolesAsync(appUser);
+                var userVm = new UserViewModel()
+                {
+                    Email = appUser.Email,
+                    PhoneNumber = appUser.PhoneNumber,
+                    FirstName = appUser.FirstName,
+                    Id = appUser.Id,
+                    LastName = appUser.LastName,
+                    UserName = appUser.UserName,
+                    Address = appUser.Address,
+                    IdentityNumber = appUser.IdentityNumber,
+                    IsConfirm = appUser.IsConfirm,
+                    Role = roles.FirstOrDefault()
+                };
+                return userVm;
             }
-            if (result.Errors != null) throw new ServiceException(result.Errors.ToString());
             return null;
         }
-        public async Task<AppUser> RegisterForRenter(RegisterModel model)
+        public async Task<UserViewModel> RegisterForRenter(RegisterModel model)
         {
             // Kiem tra xem nguoi dung da ton tai chua
-            var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm);
+            var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null) throw new ServiceException("User's already exist");
             // Kiem tra xem email da ton tai chua
-            if (_userManager.Users.Where(x => x.Email == model.Email && x.IsConfirm) != null) throw new ServiceException("Email's already exist");
+            if (await _userManager.FindByEmailAsync(model.Email) != null) throw new ServiceException("Email's already exist");
             var appUser = new AppUser()
             {
                 UserName = model.UserName,
@@ -239,7 +269,21 @@ namespace EasyAccomod.Core.Services.User
             await _userManager.AddToRoleAsync(appUser, CommonConstants.RENTER);
             if (result.Succeeded)
             {
-                return appUser;
+                var roles = await _userManager.GetRolesAsync(appUser);
+                var userVm = new UserViewModel()
+                {
+                    Email = appUser.Email,
+                    PhoneNumber = appUser.PhoneNumber,
+                    FirstName = appUser.FirstName,
+                    Id = appUser.Id,
+                    LastName = appUser.LastName,
+                    UserName = appUser.UserName,
+                    Address = appUser.Address,
+                    IdentityNumber = appUser.IdentityNumber,
+                    IsConfirm = appUser.IsConfirm,
+                    Role = roles.FirstOrDefault()
+                };
+                return userVm;
             }
             return null;
         }
@@ -260,7 +304,7 @@ namespace EasyAccomod.Core.Services.User
             await _userManager.AddToRoleAsync(user,model.Role);
             return await _userManager.GetRolesAsync(user);
         }
-        public async Task<AppUser> Update(long userId, UserUpdateModel model)
+        public async Task<UserViewModel> Update(long userId, UserUpdateModel model)
         {
             if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
@@ -273,11 +317,26 @@ namespace EasyAccomod.Core.Services.User
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.PhoneNumber = model.Phone;
-
+            user.Address = model.Address;
+            user.IdentityNumber = model.IdentityNumber;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                return user;
+                var roles = await _userManager.GetRolesAsync(user);
+                var userVm = new UserViewModel()
+                {
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    FirstName = user.FirstName,
+                    Id = user.Id,
+                    LastName = user.LastName,
+                    UserName = user.UserName,
+                    Address = user.Address,
+                    IdentityNumber = user.IdentityNumber,
+                    IsConfirm = user.IsConfirm,
+                    Role = roles.FirstOrDefault()
+                };
+                return userVm;
             }
             return null;
         }
@@ -291,13 +350,27 @@ namespace EasyAccomod.Core.Services.User
                 return true;
             return false;
         }
-        public async Task<AppUser> ConfirmUser(long userId,long accessId)
+        public async Task<UserViewModel> ConfirmUser(long userId,long accessId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null || user.IsConfirm) throw new ServiceException("Nguoi dung khong ton tai hoac da duoc confirm");
             user.IsConfirm = true;
             await _userManager.UpdateAsync(user);
-            return user;
+            var roles = await _userManager.GetRolesAsync(user);
+            var userVm = new UserViewModel()
+            {
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                FirstName = user.FirstName,
+                Id = user.Id,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                Address = user.Address,
+                IdentityNumber = user.IdentityNumber,
+                IsConfirm = user.IsConfirm,
+                Role = roles.FirstOrDefault()
+            };
+            return userVm;
         }
         public async Task<List<AppUser>> GetUsersNeedConfirm(long accessId)
         {

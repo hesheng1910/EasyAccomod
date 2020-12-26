@@ -26,6 +26,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> RequestExtendPost(RequestExtendModel model)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             model.UserId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await requestExtendService.RequestExtendPost(model);
             return Ok(result);
