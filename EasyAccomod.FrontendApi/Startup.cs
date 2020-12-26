@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EasyAccomod.Core.EF;
 using EasyAccomod.Core.Entities;
 using EasyAccomod.Core.Services.Comments;
+using EasyAccomod.Core.Services.DateViewPosts;
 using EasyAccomod.Core.Services.Notifications;
 using EasyAccomod.Core.Services.Posts;
 using EasyAccomod.Core.Services.Reports;
@@ -72,7 +73,7 @@ namespace EasyAccomod.FrontendApi
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRequestExtendService, RequestExtendService>();
-
+            services.AddTransient<IDateViewPostService, DateViewPostService>();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>

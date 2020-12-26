@@ -6,6 +6,7 @@ using EasyAccomod.Core.Common;
 using EasyAccomod.Core.Entities;
 using EasyAccomod.Core.Enums;
 using EasyAccomod.Core.Model.Post;
+using EasyAccomod.Core.Services.DateViewPosts;
 using EasyAccomod.Core.Services.Posts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,14 @@ namespace EasyAccomod.FrontendApi.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService postService;
+        private readonly IDateViewPostService dateViewPostService;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IDateViewPostService dateViewPostService)
         {
             this.postService = postService;
+            this.dateViewPostService = dateViewPostService;
         }
+
         /// <summary>
         /// Thêm bài đăng
         /// </summary>
@@ -147,6 +151,20 @@ namespace EasyAccomod.FrontendApi.Controllers
         public IActionResult GetAllPostsForMod()
         {
             var result = postService.GetAllPostForMod();
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Thống kê view trên ngày
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getstatistic")]
+        public IActionResult GetStatisticViewPerDay(long postId)
+        {
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = dateViewPostService.GetViewPostPerDays(accessId,postId);
             return Ok(result);
         }
         /// <summary>
