@@ -42,6 +42,12 @@ namespace EasyAccomod.Core.Services.User
 
             return await _userManager.IsInRoleAsync(user, role);
         }
+        public async Task<string> CheckAuthencate(long userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null) return null;
+            return user.UserName;
+        }
         public async Task<UserViewModel> Authencate(LoginModel model)
         {
             var user = _userManager.Users.Where(x => x.UserName == model.UserName && x.IsConfirm).FirstOrDefault();

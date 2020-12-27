@@ -35,12 +35,13 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         [HttpGet("check")]
-        public IActionResult CheckAuthencate()
+        public async Task<IActionResult> CheckAuthencate()
         {
-            var a = HttpContext.Session.GetString(CommonConstants.USER_SESSION);
-            if (HttpContext.Session.GetString(CommonConstants.USER_SESSION) != null)
-                return Ok(true);
-            return Ok(false);
+            var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
+            var userName = await userService.CheckAuthencate(userId);
+            if(userName == null)
+                return Ok(new { status = false,UserName = userName });
+            return Ok(new { status = true, UserName = userName });
         }
         /// <summary>
         /// Đăng xuất

@@ -12,6 +12,7 @@ namespace EasyAccomod.Core.Services.User
     {
         Task<UserViewModel> Register(RegisterModel model);
         Task<UserViewModel> RegisterForRenter(RegisterModel model);
+        Task<string> CheckAuthencate(long userId);
         Task<UserViewModel> Authencate(LoginModel model);
         Task<UserViewModel> Delete(long id, long accessId);
         Task<UserViewModel> GetById(long id,long userId);
