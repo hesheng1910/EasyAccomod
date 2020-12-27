@@ -34,7 +34,7 @@ namespace EasyAccomod.Core.Services.Comments
         }
         public async Task<Comment> AddComment(long userId,long postId, AddCommentModel model)
         {
-            if (await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false)
+            if (await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false && await CheckUserAndRole(userId, CommonConstants.OWNER) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm == true).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
@@ -60,8 +60,6 @@ namespace EasyAccomod.Core.Services.Comments
 
         public async Task<List<Comment>> GetCommentByPostId(long postId,long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false && await CheckUserAndRole(accessId, CommonConstants.OWNER) == false)
-                throw new ServiceException("Tài khoản không có quyền truy cập");
             var comments = context.Comments.Where(x => x.PostId == postId && x.IsConfirm == true).ToList();
             if (comments == null) throw new ServiceException("Không có comment nào");
             return comments;

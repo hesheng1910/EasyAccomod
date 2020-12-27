@@ -34,7 +34,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<PostViewModel> AddPost(AddPostModel model )
         {
-            if (await CheckUserAndRole(model.UserId, CommonConstants.OWNER) == false)
+            if (await CheckUserAndRole(model.UserId, CommonConstants.OWNER) == false && await CheckUserAndRole(model.UserId, CommonConstants.ADMIN) == false && await CheckUserAndRole(model.UserId, CommonConstants.MODERATOR) == false)
                 throw new ServiceException("Tai khoan khong du quyen dang nhap");
             var imgs = "";
             if (model.fileimgs.Count() < 3) throw new ServiceException("Cần upload ít nhất 3 ảnh");
@@ -140,7 +140,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<PostViewModel> AddPostForMod(AddPostModel model)
         {
-            if (await CheckUserAndRole(model.UserId, CommonConstants.MODERATOR) == false)
+            if (await CheckUserAndRole(model.UserId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(model.UserId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tai khoan khong du quyen dang nhap");
             var imgs = "";
             if (model.fileimgs.Count() < 3) throw new ServiceException("Cần upload ít nhất 3 ảnh");
@@ -808,7 +808,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<bool> LikePost(long postId,long userId)
         {
-            if (await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false)
+            if (await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false && await CheckUserAndRole(userId, CommonConstants.OWNER) == false)
                 throw new ServiceException("Tai khoan khong du quyen dang nhap");
             var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
@@ -836,7 +836,7 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<List<PostViewModel>> GetFavouritePosts(long userId)
         {
-            if (await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId,CommonConstants.RENTER) == false)
+            if (await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId,CommonConstants.RENTER) == false && await CheckUserAndRole(userId, CommonConstants.OWNER) == false)
                 throw new ServiceException("Tai khoan khong du quyen dang nhap");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
@@ -1325,7 +1325,6 @@ namespace EasyAccomod.Core.Services.Posts
                 models.Add(modelVm);
             }
             return models;
-
         }
 
     }
