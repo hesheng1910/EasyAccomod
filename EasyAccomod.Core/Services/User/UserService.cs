@@ -58,7 +58,7 @@ namespace EasyAccomod.Core.Services.User
             var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
             authenResult = new AuthenResult()
             {
-                Status = false,
+                Status = true,
                 Role = role,
                 UserName = user.UserName
             };
