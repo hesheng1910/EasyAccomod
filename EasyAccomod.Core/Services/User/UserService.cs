@@ -69,7 +69,7 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<UserViewModel> Delete(long id,long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
 
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -102,7 +102,7 @@ namespace EasyAccomod.Core.Services.User
 
         public async Task<UserViewModel> GetById(long id,long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = _userManager.Users.Where(x => x.Id == id && x.IsConfirm).FirstOrDefault();
             if (user == null)
@@ -127,7 +127,7 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<List<UserViewModel>> GetOwners(long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false)
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             var users = _userManager.Users.Where(x => x.IsConfirm);
             List<UserViewModel> viewModels = new List<UserViewModel>();
@@ -287,7 +287,7 @@ namespace EasyAccomod.Core.Services.User
             }
             return null;
         }
-        public async Task<IList<string>> RoleAssign(RoleAssignModel model)
+        public async Task<string> RoleAssign(RoleAssignModel model)
         {
             if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
@@ -302,11 +302,11 @@ namespace EasyAccomod.Core.Services.User
             if(roleInUser != null)
                 await _userManager.RemoveFromRoleAsync(user,roleInUser);
             await _userManager.AddToRoleAsync(user,model.Role);
-            return await _userManager.GetRolesAsync(user);
+            return (await _userManager.GetRolesAsync(user)).FirstOrDefault();
         }
         public async Task<UserViewModel> Update(long userId, UserUpdateModel model)
         {
-            if (await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
+            if (await CheckUserAndRole(model.AccessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(model.AccessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             if (await _userManager.Users.AnyAsync(x => x.Email == model.Email && x.Id != userId))
             {
@@ -352,6 +352,8 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<UserViewModel> ConfirmUser(long userId,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = await _userManager.FindByIdAsync(userId.ToString());
             if (user == null || user.IsConfirm) throw new ServiceException("Nguoi dung khong ton tai hoac da duoc confirm");
             user.IsConfirm = true;
@@ -374,6 +376,8 @@ namespace EasyAccomod.Core.Services.User
         }
         public async Task<List<AppUser>> GetUsersNeedConfirm(long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             return _userManager.Users.Where(x => x.IsConfirm == false).ToList();
         }
     }

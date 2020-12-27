@@ -10,7 +10,7 @@ namespace EasyAccomod.Core.Services.Reports
     public interface IReportService
     {
         Task<Report> AddReport(long userId,AddReportModel model);
-        List<Report> GetAllReport();
-        Task<bool> DeleteReport(long reportId);
+        Task<List<Report>> GetAllReport(long accessId);
+        Task<bool> DeleteReport(long reportId,long accessId);
     }
 }

@@ -11,6 +11,7 @@ using AGID.Core.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using EasyAccomod.Core.Model.Comment;
 using EasyAccomod.Core.Enums;
+using EasyAccomod.Core.Common;
 
 namespace EasyAccomod.Core.Services.Comments
 {
@@ -24,8 +25,17 @@ namespace EasyAccomod.Core.Services.Comments
             this.context = context;
             this.userManager = userManager;
         }
+        public async Task<bool> CheckUserAndRole(long accessId, string role)
+        {
+            var user = userManager.Users.Where(x => x.Id == accessId && x.IsConfirm).FirstOrDefault();
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
+
+            return await userManager.IsInRoleAsync(user, role);
+        }
         public async Task<Comment> AddComment(long userId,long postId, AddCommentModel model)
         {
+            if (await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm == true).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
             var post = context.Posts.Where(x => x.PostId == postId && ((DateTime.Today - x.PublicTime).Days < x.EffectiveTime * 7) && x.PostStatus == PostStatusEnum.Accepted);
@@ -48,15 +58,19 @@ namespace EasyAccomod.Core.Services.Comments
 
 
 
-        public async Task<List<Comment>> GetCommentByPostId(long postId)
+        public async Task<List<Comment>> GetCommentByPostId(long postId,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false && await CheckUserAndRole(accessId, CommonConstants.OWNER) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var comments = context.Comments.Where(x => x.PostId == postId && x.IsConfirm == true).ToList();
             if (comments == null) throw new ServiceException("Không có comment nào");
             return comments;
         }
 
-        public async Task<Comment> ConfirmComment(long cmtId)
+        public async Task<Comment> ConfirmComment(long cmtId,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false )
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var comment = context.Comments.Where(x => x.IsConfirm == false && x.CommentId == cmtId).FirstOrDefault();
             if (comment == null) throw new ServiceException("Comment khong ton tai");
             comment.IsConfirm = true;
@@ -64,13 +78,17 @@ namespace EasyAccomod.Core.Services.Comments
             await context.SaveChangesAsync();
             return comment;
         }
-        public List<Comment> GetCommentsNeedConfirm()
+        public async Task<List<Comment>> GetCommentsNeedConfirm(long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             return context.Comments.Where(x => x.IsConfirm == false).ToList();
         }
 
-        public async Task<Comment> DeleteComment(long cmtId)
+        public async Task<Comment> DeleteComment(long cmtId,long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var comment = await context.Comments.FindAsync(cmtId);
             if (comment == null) throw new ServiceException("Comment khong ton tai");
             context.Comments.Remove(comment);

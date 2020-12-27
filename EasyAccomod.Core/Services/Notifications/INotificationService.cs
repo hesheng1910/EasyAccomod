@@ -8,8 +8,8 @@ namespace EasyAccomod.Core.Services.Notifications
 {
     public interface INotificationService
     {
-        List<Notification> GetNotificationForMod();
-        List<Notification> GetNotificationForOwner();
-        Task<Notification> DeleteNotification(long notifId);
+        Task<List<Notification>> GetNotificationForMod(long accessId);
+        Task<List<Notification>> GetNotificationForOwner(long accessId);
+        Task<Notification> DeleteNotification(long notifId,long accessId);
     }
 }

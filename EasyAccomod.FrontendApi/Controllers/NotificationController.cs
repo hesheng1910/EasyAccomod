@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EasyAccomod.Core.Common;
 using EasyAccomod.Core.Services.Notifications;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,31 @@ namespace EasyAccomod.FrontendApi.Controllers
             this.notificationService = notificationService;
         }
         [HttpGet("notifowner")]
-        public IActionResult GetNotificationForOwner()
+        public async Task<IActionResult> GetNotificationForOwner()
         {
-            return Ok(notificationService.GetNotificationForOwner());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await notificationService.GetNotificationForOwner(accessId));
         }
         [HttpGet("notifmod")]
-        public IActionResult GetNotificationForMod()
+        public async Task<IActionResult> GetNotificationForMod()
         {
-            return Ok(notificationService.GetNotificationForMod());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await notificationService.GetNotificationForMod(accessId));
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteNotifi(long notiId)
+        {
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await notificationService.DeleteNotification(notiId,accessId));
         }
     }
 }

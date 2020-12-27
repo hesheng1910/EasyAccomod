@@ -34,7 +34,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> AddPost([FromForm]AddPostModel model)
         {
             await HttpContext.Session.LoadAsync();
-            model.UserId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            model.UserId = Convert.ToInt64(userId);
             var result = await postService.AddPost(model);
             return Ok(result);
         }
@@ -43,14 +46,22 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getall")]
-        public IActionResult GetAllPost()
+        public async Task<IActionResult> GetAllPost()
         {
-            return Ok(postService.GetAllPost());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await postService.GetAllPost(accessId));
         }
         [HttpGet("getallforowner")]
-        public IActionResult GetAllPostForOwner()
+        public async Task<IActionResult> GetAllPostForOwner()
         {
-            return Ok(postService.GetAllPostForOwner());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await postService.GetAllPostForOwner(accessId));
         }
         /// <summary>
         /// Xem bài đăng
@@ -66,6 +77,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPost("search")]
         public IActionResult SearchPost(SearchPostModel model)
         {
+
             var result = postService.SearchPost(model);
             return Ok(result);
         }
@@ -78,14 +90,21 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> GetFavouritePosts()
         {
             await HttpContext.Session.LoadAsync();
-            var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
-            var result = await postService.GetFavouritePosts(userId);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.GetFavouritePosts(accessId);
             return Ok(result);
         }
         [HttpPut("update")]
         public async Task<IActionResult> UpdatePost(long postId,[FromForm] UpdatePostModel model)
         {
-            var result = await postService.UpdatePost(postId, model);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.UpdatePost(postId,accessId, model);
             return Ok(result);
         }
         /// <summary>
@@ -98,8 +117,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> UpdateStatusPost(long postId, bool hired)
         {
             await HttpContext.Session.LoadAsync();
-            var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
-            var result = await postService.UpdateStatusPost(userId,postId,hired);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.UpdateStatusPost(accessId,postId,hired);
             return Ok(result);
         }
         /// <summary>
@@ -110,10 +132,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPut("like")]
         public async Task<IActionResult> LikePost(long postId)
         {
-            await HttpContext.Session.LoadAsync();
             var session = HttpContext.Session;
-            var userId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
-            var result = await postService.LikePost(postId, userId);
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.LikePost(postId,accessId);
             return Ok(result);
         }
         /// <summary>
@@ -124,7 +147,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleltePost(long postId)
         {
-            var result = await postService.DeletePost(postId);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.DeletePost(postId,accessId);
             return Ok(result);
         }
         /// <summary>
@@ -148,23 +175,23 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getallformod")]
-        public IActionResult GetAllPostsForMod()
-        {
-            var result = postService.GetAllPostForMod();
-            return Ok(result);
-        }
-        /// <summary>
-        /// Mod: Thống kê view trên ngày
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getstatistic")]
-        public IActionResult GetStatisticViewPerDay(long postId)
+        public async Task<IActionResult> GetAllPostsForMod()
         {
             var session = HttpContext.Session;
             var userId = session.GetString(CommonConstants.USER_SESSION);
             if (userId == null) return Unauthorized();
             var accessId = Convert.ToInt64(userId);
-            var result = dateViewPostService.GetViewPostPerDays(accessId,postId);
+            var result = await postService.GetAllPostForMod(accessId);
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Thống kê
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("mostview")]
+        public async Task<IActionResult> GetMostViewPosts()
+        {
+            var result = await postService.GetMostViewPosts();
             return Ok(result);
         }
         /// <summary>
@@ -175,7 +202,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPut("changestatus")]
         public async Task<IActionResult> SetPostStatus(long postId,PostStatusEnum postStatusEnum)
         {
-            var result = await postService.SetPostStatus(postId,postStatusEnum);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await postService.SetPostStatus(postId,accessId,postStatusEnum);
             return Ok(result);
         }
     }

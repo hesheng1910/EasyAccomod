@@ -1,4 +1,5 @@
 ﻿using AGID.Core.Exceptions;
+using EasyAccomod.Core.Common;
 using EasyAccomod.Core.EF;
 using EasyAccomod.Core.Entities;
 using EasyAccomod.Core.Model.Notification;
@@ -19,9 +20,18 @@ namespace EasyAccomod.Core.Services.Notifications
             this.context = context;
             this.userManager = userManager;
         }
-
-        public async Task<Notification> DeleteNotification(long notifId)
+        public async Task<bool> CheckUserAndRole(long accessId, string role)
         {
+            var user = userManager.Users.Where(x => x.Id == accessId && x.IsConfirm).FirstOrDefault();
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
+
+            return await userManager.IsInRoleAsync(user, role);
+        }
+
+        public async Task<Notification> DeleteNotification(long notifId,long accessId)
+        {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             var notif = await context.Notifications.FindAsync(notifId);
             if (notif == null) throw new ServiceException("Thong bao khong ton tai");
             context.Notifications.Remove(notif);
@@ -29,12 +39,16 @@ namespace EasyAccomod.Core.Services.Notifications
             return notif;
         }
 
-        public List<Notification> GetNotificationForMod()
+        public async Task<List<Notification>> GetNotificationForMod(long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             return context.Notifications.Where(x => x.OfMod == true).ToList();
         }
-        public List<Notification> GetNotificationForOwner()
+        public async Task<List<Notification>> GetNotificationForOwner(long accessId)
         {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false && await CheckUserAndRole(accessId,CommonConstants.OWNER) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
             return context.Notifications.Where(x => x.OfMod == false).ToList();
         }
     }

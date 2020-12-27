@@ -11,10 +11,10 @@ namespace EasyAccomod.Core.Services.RequestExtends
     public interface IRequestExtendService
     {
         Task<RequestExtend> RequestExtendPost(RequestExtendModel model);
-        List<RequestExtend> GetPostsRequestExtend();
-        Task<Post> ConfirmRequestExtend(long requestId);
-        Task<Post> RejectRequestExtend(long requestId);
-        Task<RequestExtend> DeleteRequestExtend(long requestId);
+        Task<List<RequestExtend>> GetPostsRequestExtend(long accessId);
+        Task<Post> ConfirmRequestExtend(long requestId,long accessId);
+        Task<Post> RejectRequestExtend(long requestId,long accessId);
+        Task<RequestExtend> DeleteRequestExtend(long requestId,long accessId);
 
     }
 }

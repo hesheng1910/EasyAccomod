@@ -25,8 +25,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> AddReport(AddReportModel model)
         {
             var session = HttpContext.Session;
-            var userId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
-            var result = await reportService.AddReport(userId,model);
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await reportService.AddReport(accessId,model);
             if (result == null) return BadRequest();
             return Ok(result);
         }
@@ -35,15 +37,22 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getall")]
-        public IActionResult GetAllReport()
+        public async Task<IActionResult> GetAllReport()
         {
-            return Ok(reportService.GetAllReport());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await reportService.GetAllReport(accessId));
         }
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteReport(long reportId)
         {
-
-            return Ok(await reportService.DeleteReport(reportId));
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await reportService.DeleteReport(reportId,accessId));
         }
     }
 }

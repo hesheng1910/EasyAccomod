@@ -72,6 +72,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> GetById(long id)
         {
             var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
             var result = await userService.GetById(id, accessId);
             if (result == null) BadRequest();
@@ -106,20 +107,6 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Thay đổi mật khẩu
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpPut("changepassword")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
-        {
-            var session = HttpContext.Session;
-            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
-            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
-            var result = await userService.ChangePassword(accessId, model);
-            return Ok(result);
-        }
-        /// <summary>
         /// Lấy ra danh sách người dùng
         /// </summary>
         /// <param name="model"></param>
@@ -139,12 +126,26 @@ namespace EasyAccomod.FrontendApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getconfirm")]
-        public IActionResult GetUsersNeedConfirm()
+        public async Task<IActionResult> GetUsersNeedConfirm()
         {
             var session = HttpContext.Session;
             if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
             var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
-            return Ok(userService.GetUsersNeedConfirm(accessId));
+            return Ok(await userService.GetUsersNeedConfirm(accessId));
+        }
+        /// <summary>
+        /// Thay đổi mật khẩu
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPut("changepassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var session = HttpContext.Session;
+            if (session.GetString(CommonConstants.USER_SESSION) == null) return Unauthorized();
+            var accessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION));
+            var result = await userService.ChangePassword(accessId, model);
+            return Ok(result);
         }
         /// <summary>
         /// Admin : Phân quyền

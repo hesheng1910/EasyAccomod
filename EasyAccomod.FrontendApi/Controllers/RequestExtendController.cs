@@ -32,21 +32,43 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         [HttpGet("getrequest")]
-        public IActionResult GetPostsRequestExtend()
+        public async Task<IActionResult> GetPostsRequestExtend()
         {
-            var result = requestExtendService.GetPostsRequestExtend();
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await requestExtendService.GetPostsRequestExtend(accessId);
             return Ok(result);
         }
         [HttpPut("confirm")]
         public async Task<IActionResult> ConfirmRequestExtend(long requestId)
         {
-            var result = await requestExtendService.ConfirmRequestExtend(requestId);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await requestExtendService.ConfirmRequestExtend(requestId,accessId);
             return Ok(result);
         }
         [HttpPut("reject")]
         public async Task<IActionResult> RejectRequestExtend(long requestId)
         {
-            var result = await requestExtendService.RejectRequestExtend(requestId);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await requestExtendService.RejectRequestExtend(requestId,accessId);
+            return Ok(result);
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteRequest(long requestId)
+        {
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await requestExtendService.DeleteRequestExtend(requestId,accessId);
             return Ok(result);
         }
 

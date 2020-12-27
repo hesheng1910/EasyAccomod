@@ -13,16 +13,17 @@ namespace EasyAccomod.Core.Services.Posts
     {
         Task<PostViewModel> AddPost(AddPostModel model);
         Task<PostViewModel> AddPostForMod(AddPostModel model);
-        List<PostViewModel> GetAllPost();
-        List<PostViewModel> GetAllPostForOwner();
+        Task<List<PostViewModel>> GetAllPost(long accessId);
+        Task<List<PostViewModel>> GetAllPostForOwner(long accessId);
         Task<PostViewModel> ViewPost(long postId);
-        Task<PostViewModel> UpdatePost(long postId, UpdatePostModel model);
+        Task<PostViewModel> UpdatePost(long postId, long accessId, UpdatePostModel model);
         Task<Post> UpdateStatusPost(long userId, long postId, bool hired);
         Task<bool> LikePost(long postId, long userId);
         Task<List<PostViewModel>> GetFavouritePosts(long userId);
-        List<PostViewModel> GetAllPostForMod();
-        Task<Post> SetPostStatus(long postId,PostStatusEnum postStatusEnum);
-        Task<Post> DeletePost(long postId);
+        Task<List<PostViewModel>> GetAllPostForMod(long accessId);
+        Task<Post> SetPostStatus(long postId,long accessId,PostStatusEnum postStatusEnum);
+        Task<List<PostViewModel>> GetMostViewPosts();
+        Task<Post> DeletePost(long postId,long accessId);
         List<PostViewModel> SearchPost(SearchPostModel model);
     }
 }

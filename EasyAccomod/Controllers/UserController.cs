@@ -37,26 +37,7 @@ namespace EasyAccomod.Api.Controllers
 
             return Ok(result);
         }
-        /// <summary>
-        /// Lấy ra danh sách người dùng
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpGet("getuserspaging")]
-        public async Task<IActionResult> GetUsersPaging(int pageIndex,int pageSize,string keyword)
-        {
-            var session = HttpContext.Session;
-            GetUserPagingModel model = new GetUserPagingModel()
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Keyword = keyword,
-                AccessId = Convert.ToInt64(session.GetString(CommonConstants.USER_SESSION))
-        };
-            var result = await userService.GetUsersPaging(model);
-            if (result == null) BadRequest();
-            return Ok(result);
-        }
+
         /// <summary>
         /// Mod: Lấy các tài khoản cần confirm
         /// </summary>

@@ -19,7 +19,7 @@ namespace EasyAccomod.Core.Services.User
         Task<List<UserViewModel>> GetOwners(long accessId);
         Task<bool> ChangePassword(long accessId, ChangePasswordModel model);
         Task<List<UserViewModel>> GetAllUsers(long accessId);
-        Task<IList<string>> RoleAssign(RoleAssignModel model);
+        Task<string> RoleAssign(RoleAssignModel model);
         Task<UserViewModel> Update(long userId, UserUpdateModel model);
         Task<List<AppUser>> GetUsersNeedConfirm(long accessId);
         Task<UserViewModel> ConfirmUser(long userId,long accessId);

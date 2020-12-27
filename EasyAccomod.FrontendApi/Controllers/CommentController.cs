@@ -29,8 +29,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddComment(long postId, AddCommentModel model)
         {
-            var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
-            var result = await commentService.AddComment(userId, postId, model);
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            var result = await commentService.AddComment(accessId, postId, model);
             return Ok(result);
         }
         /// <summary>
@@ -41,12 +44,20 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpGet("getbypostid")]
         public async Task<IActionResult> GetCommentByPostId(long postId)
         {
-            return Ok(await commentService.GetCommentByPostId(postId));
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await commentService.GetCommentByPostId(postId,accessId));
         }
         [HttpGet("getconfirm")]
-        public IActionResult GetCommentsNeedConfirm()
+        public async Task<IActionResult> GetCommentsNeedConfirm()
         {
-            return Ok(commentService.GetCommentsNeedConfirm());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await commentService.GetCommentsNeedConfirm(accessId));
         }
         /// <summary>
         /// Trả về comment đã confirm
@@ -56,12 +67,20 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpPost("confirm")]
         public async Task<IActionResult> ConfirmComment(long cmtId)
         {
-            return Ok(await commentService.ConfirmComment(cmtId));
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await commentService.ConfirmComment(cmtId,accessId));
         }
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteComment(long cmtId)
         {
-            return Ok(await commentService.DeleteComment(cmtId));
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await commentService.DeleteComment(cmtId,accessId));
         }
     }
 }
