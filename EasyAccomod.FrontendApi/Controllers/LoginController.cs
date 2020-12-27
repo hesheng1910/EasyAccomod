@@ -38,10 +38,8 @@ namespace EasyAccomod.FrontendApi.Controllers
         public async Task<IActionResult> CheckAuthencate()
         {
             var userId = Convert.ToInt64(HttpContext.Session.GetString(CommonConstants.USER_SESSION));
-            var userName = await userService.CheckAuthencate(userId);
-            if(userName == null)
-                return Ok(new { status = false,UserName = userName });
-            return Ok(new { status = true, UserName = userName });
+            var result = await userService.CheckAuthencate(userId);
+            return Ok(result);
         }
         /// <summary>
         /// Đăng xuất

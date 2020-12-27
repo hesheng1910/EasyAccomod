@@ -42,11 +42,28 @@ namespace EasyAccomod.Core.Services.User
 
             return await _userManager.IsInRoleAsync(user, role);
         }
-        public async Task<string> CheckAuthencate(long userId)
+        public async Task<AuthenResult> CheckAuthencate(long userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            if (user == null) return null;
-            return user.UserName;
+            AuthenResult authenResult = new AuthenResult();
+            if (user == null)
+            {
+                return authenResult = new AuthenResult()
+                {
+                    Status = false,
+                    Role = null,
+                    UserName = null
+                };
+            }
+            var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+            authenResult = new AuthenResult()
+            {
+                Status = false,
+                Role = role,
+                UserName = user.UserName
+            };
+
+            return authenResult;
         }
         public async Task<UserViewModel> Authencate(LoginModel model)
         {
