@@ -13,7 +13,7 @@ namespace EasyAccomod.Core.Model.Post
         public string Commune { get; set; }
         public string Street { get; set; }
         public string AddressNearBy { get; set; }
-        public int RoomCategoryName { get; set; }
+        public int RoomCategoryId { get; set; }
         public bool AirCond { get; set; }
         /// <summary>
         /// Tủ lạnh

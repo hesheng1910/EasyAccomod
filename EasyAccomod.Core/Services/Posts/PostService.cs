@@ -133,6 +133,7 @@ namespace EasyAccomod.Core.Services.Posts
                 EffectiveTime = model.EffectiveTime,
                 TotalLike = 0,
                 TotalView = 0,
+                WithOwner = model.WithOwner,
                 PostStatus = post.PostStatus
             };
             return postVM;
@@ -238,6 +239,7 @@ namespace EasyAccomod.Core.Services.Posts
                 EffectiveTime = model.EffectiveTime,
                 TotalLike = 0,
                 TotalView = 0,
+                WithOwner = model.WithOwner,
                 PostStatus = post.PostStatus
             };
             return postVM;
@@ -396,6 +398,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };
@@ -558,6 +561,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };
@@ -596,6 +600,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };
@@ -632,6 +637,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };
@@ -669,6 +675,7 @@ namespace EasyAccomod.Core.Services.Posts
                 PublicTime = post.PublicTime,
                 TotalLike = post.TotalLike,
                 TotalView = post.TotalView+1,
+                WithOwner = post.WithOwner,
                 PostStatus = post.PostStatus,
                 RoomCategoryId = post.RoomCategoryId
             };
@@ -769,6 +776,7 @@ namespace EasyAccomod.Core.Services.Posts
                 PublicTime = post.PublicTime,
                 TotalLike = post.TotalLike,
                 TotalView = post.TotalView,
+                WithOwner = post.WithOwner,
                 PostStatus = post.PostStatus,
                 RoomCategoryId = post.RoomCategoryId,
                 PostId = post.PostId
@@ -1027,6 +1035,7 @@ namespace EasyAccomod.Core.Services.Posts
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
                     PostStatus = post.PostStatus,
+                    WithOwner = post.WithOwner,
                     RoomCategoryId = post.RoomCategoryId
                 };
                 models.Add(model);
@@ -1095,6 +1104,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };
@@ -1227,31 +1237,31 @@ namespace EasyAccomod.Core.Services.Posts
             if (model.City != null)
             {
                 searchResult = searchResult.Where(x => x.City.Contains(model.City));
-                if(model.District != null)
+                if (model.District != null)
                 {
                     searchResult = searchResult.Where(x => x.District.Contains(model.District));
-                    if(model.Commune != null)
+                    if (model.Commune != null)
                     {
                         searchResult = searchResult.Where(x => x.Commune.Contains(model.Commune));
-                        if(model.Street != null)
+                        if (model.Street != null)
                             searchResult = searchResult.Where(x => x.Street.Contains(model.Street));
                     }
                 }
             }
-            if(model.AddressNearBy != null)
+            if (model.AddressNearBy != null)
             {
                 searchResult = searchResult.Where(x => x.Education.Contains(model.AddressNearBy) || x.BusStation.Contains(model.AddressNearBy) || x.Medical.Contains(model.AddressNearBy));
             }
-            if(model.AirCond == true)
+            if (model.AirCond == true)
                 searchResult = searchResult.Where(x => x.AirCond == model.AirCond);
             if (model.Bath == true)
-                searchResult = searchResult.Where( x => x.Bath == model.Bath);
+                searchResult = searchResult.Where(x => x.Bath == model.Bath);
             if (model.WithOwner == true)
                 searchResult = searchResult.Where(x => x.WithOwner == model.WithOwner);
             if (model.Fridge == true)
                 searchResult = searchResult.Where(x => x.Fridge == model.Fridge);
             searchResult = searchResult.Where(x => x.Kitchen == model.Kitchen);
-            if(model.MaxPrice != 0)
+            if (model.MaxPrice != 0)
             {
                 searchResult = searchResult.Where(x => x.Price < model.MaxPrice);
             }
@@ -1259,6 +1269,11 @@ namespace EasyAccomod.Core.Services.Posts
             {
                 searchResult = searchResult.Where(x => x.Price < model.MinPrice);
             }
+            if (model.RoomCategoryId != null)
+            {
+                searchResult = searchResult.Where(x => x.RoomCategoryId == (RoomCategoryEnum)model.RoomCategoryId);
+            }
+
             List<PostViewModel> models = new List<PostViewModel>();
             foreach (var post in searchResult)
             {
@@ -1301,6 +1316,7 @@ namespace EasyAccomod.Core.Services.Posts
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
                     TotalView = post.TotalView,
+                    WithOwner = post.WithOwner,
                     PostStatus = post.PostStatus,
                     RoomCategoryId = post.RoomCategoryId
                 };

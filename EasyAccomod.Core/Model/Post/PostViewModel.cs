@@ -56,6 +56,7 @@ namespace EasyAccomod.Core.Model.Post
         public string EmailOwner { get; set; }
         public long TotalLike { get; set; }
         public long TotalView { get; set; }
+        public bool WithOwner { get; set; }
         public PostStatusEnum PostStatus { get; set; }
         /// <summary>
         /// Đã được thuê chưa?
