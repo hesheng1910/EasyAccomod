@@ -1260,7 +1260,11 @@ namespace EasyAccomod.Core.Services.Posts
                 searchResult = searchResult.Where(x => x.WithOwner == model.WithOwner);
             if (model.Fridge == true)
                 searchResult = searchResult.Where(x => x.Fridge == model.Fridge);
-            searchResult = searchResult.Where(x => x.Kitchen == model.Kitchen);
+            if(model.Kitchen != 0)
+            {
+                searchResult = searchResult.Where(x => x.Kitchen == (KitchenCategoryEnum)model.Kitchen);
+            }
+            
             if (model.MaxPrice != 0)
             {
                 searchResult = searchResult.Where(x => x.Price < model.MaxPrice);
@@ -1269,7 +1273,7 @@ namespace EasyAccomod.Core.Services.Posts
             {
                 searchResult = searchResult.Where(x => x.Price < model.MinPrice);
             }
-            if (model.RoomCategoryId != null)
+            if (model.RoomCategoryId != 0)
             {
                 searchResult = searchResult.Where(x => x.RoomCategoryId == (RoomCategoryEnum)model.RoomCategoryId);
             }

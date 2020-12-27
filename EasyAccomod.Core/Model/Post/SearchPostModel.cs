@@ -34,7 +34,7 @@ namespace EasyAccomod.Core.Model.Post
         /// <summary>
         /// Bếp
         /// </summary>
-        public KitchenCategoryEnum Kitchen { get; set; }
+        public int Kitchen { get; set; }
         public decimal MaxPrice { get; set; }
         public decimal MinPrice { get; set; }
     }
