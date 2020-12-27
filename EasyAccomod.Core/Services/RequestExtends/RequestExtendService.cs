@@ -79,7 +79,7 @@ namespace EasyAccomod.Core.Services.RequestExtends
                 Content = CommonConstants.REQUEST_ACCEPTED,
                 NotifTime = DateTime.Now,
                 OfMod = false,
-                UserName = null,
+                UserName = request.UserName,
                 PostId = post.PostId,
                 IsDelete = false
             };
@@ -102,7 +102,7 @@ namespace EasyAccomod.Core.Services.RequestExtends
                 Content = CommonConstants.REQUEST_REJECTED,
                 NotifTime = DateTime.Now,
                 OfMod = false,
-                UserName = null,
+                UserName = request.UserName,
                 PostId = post.PostId,
                 IsDelete = false
             };

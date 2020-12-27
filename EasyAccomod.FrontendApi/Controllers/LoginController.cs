@@ -37,6 +37,7 @@ namespace EasyAccomod.FrontendApi.Controllers
         [HttpGet("check")]
         public IActionResult CheckAuthencate()
         {
+            var a = HttpContext.Session.GetString(CommonConstants.USER_SESSION);
             if (HttpContext.Session.GetString(CommonConstants.USER_SESSION) != null)
                 return Ok(true);
             return Ok(false);

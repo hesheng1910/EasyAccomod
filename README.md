@@ -27,6 +27,8 @@ dotnet ef --project EasyAccomod.Core database update DateViewPost
 
 dotnet ef --project EasyAccomod.Core database update FixPost
 
+dotnet ef --project EasyAccomod.Core database update FixRole
+
 #Đặt EasyAccomod.BackendApi hoặc EasyAccomod.FrontendApi để Run
 
 Tài khoản admin:
