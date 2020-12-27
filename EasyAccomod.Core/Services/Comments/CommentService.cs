@@ -38,7 +38,7 @@ namespace EasyAccomod.Core.Services.Comments
                 throw new ServiceException("Tài khoản không có quyền truy cập");
             var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm == true).FirstOrDefault();
             if (user == null) throw new ServiceException("Tài khoản không tồn tại");
-            var post = context.Posts.Where(x => x.PostId == postId && ((DateTime.Today - x.PublicTime).Days < x.EffectiveTime * 7) && x.PostStatus == PostStatusEnum.Accepted);
+            var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();
             if (post == null) throw new ServiceException("Bài đăng không tồn tại hoặc đã hết hạn");
             if (model.Star < 1 && model.Star > 5) throw new ServiceException("Sao phải lớn hơn hoặc bằng 1 và nhỏ hơn hoặc bằng 5");
             Comment comment = new Comment()
