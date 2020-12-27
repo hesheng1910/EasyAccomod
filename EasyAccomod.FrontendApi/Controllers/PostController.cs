@@ -185,13 +185,23 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Mod: Thống kê
+        /// Mod: Thống kê View
         /// </summary>
         /// <returns></returns>
         [HttpGet("mostview")]
         public async Task<IActionResult> GetMostViewPosts()
         {
             var result = await postService.GetMostViewPosts();
+            return Ok(result);
+        }
+        /// <summary>
+        /// Mod: Thống kê Like
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("mostlike")]
+        public async Task<IActionResult> GetMostLikePosts()
+        {
+            var result = await postService.GetMostLikePosts();
             return Ok(result);
         }
         /// <summary>

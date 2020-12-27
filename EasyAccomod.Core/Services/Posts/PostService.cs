@@ -569,135 +569,11 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<List<PostViewModel>> GetMostViewPosts()
         {
-            var posts = context.Infrastructures.Join(context.Posts, i => i.Id, p => p.InfrastructureId,
-                                               (i, p) => new
-                                               {
-                                                   p.PostId,
-                                                   i.AirCond,
-                                                   i.Balcony,
-                                                   i.Bath,
-                                                   i.ElecPrice,
-                                                   i.Fridge,
-                                                   i.Kitchen,
-                                                   i.WaterHeater,
-                                                   i.WaterPrice,
-                                                   p.UserId,
-                                                   p.AddressNearById,
-                                                   p.Area,
-                                                   p.EffectiveTime,
-                                                   p.City,
-                                                   p.Description,
-                                                   p.District,
-                                                   p.PublicTime,
-                                                   p.Hired,
-                                                   p.Images,
-                                                   p.InfrastructureId,
-                                                   p.IsDetele,
-                                                   p.PostStatus,
-                                                   p.Price,
-                                                   p.RoomCategoryId,
-                                                   p.Rooms,
-                                                   p.Street,
-                                                   p.Commune,
-                                                   p.TotalLike,
-                                                   p.TotalView,
-                                                   p.WithOwner
-                                               }).Join(context.AddressNearBies, i => i.AddressNearById, a => a.Id,
-                                               (i, a) => new
-                                               {
-                                                   i.PostId,
-                                                   i.AirCond,
-                                                   i.Balcony,
-                                                   i.Bath,
-                                                   i.Commune,
-                                                   i.ElecPrice,
-                                                   i.Fridge,
-                                                   i.Kitchen,
-                                                   i.EffectiveTime,
-                                                   i.WaterHeater,
-                                                   i.WaterPrice,
-                                                   i.UserId,
-                                                   a.Medical,
-                                                   a.BusStation,
-                                                   a.Education,
-                                                   i.Area,
-                                                   i.City,
-                                                   i.Description,
-                                                   i.District,
-                                                   i.PublicTime,
-                                                   i.Hired,
-                                                   i.Images,
-                                                   i.InfrastructureId,
-                                                   i.IsDetele,
-                                                   i.PostStatus,
-                                                   i.Price,
-                                                   i.RoomCategoryId,
-                                                   i.Rooms,
-                                                   i.Street,
-                                                   i.TotalLike,
-                                                   i.TotalView,
-                                                   i.WithOwner
-                                               }).Join(userManager.Users, i => i.UserId, u => u.Id,
-                                                   (i, u) => new
-                                                   {
-                                                       i.PostId,
-                                                       i.AirCond,
-                                                       i.Balcony,
-                                                       i.Bath,
-                                                       i.ElecPrice,
-                                                       i.Fridge,
-                                                       i.Commune,
-                                                       i.Kitchen,
-                                                       i.EffectiveTime,
-                                                       i.WaterHeater,
-                                                       i.WaterPrice,
-                                                       i.Medical,
-                                                       i.BusStation,
-                                                       i.Education,
-                                                       u.PhoneNumber,
-                                                       u.LastName,
-                                                       u.FirstName,
-                                                       u.Email,
-                                                       u.UserName,
-                                                       i.UserId,
-                                                       i.Area,
-                                                       i.City,
-                                                       i.Description,
-                                                       i.District,
-                                                       i.PublicTime,
-                                                       i.Hired,
-                                                       i.Images,
-                                                       i.InfrastructureId,
-                                                       i.IsDetele,
-                                                       i.PostStatus,
-                                                       i.Price,
-                                                       i.RoomCategoryId,
-                                                       i.Rooms,
-                                                       i.Street,
-                                                       i.TotalLike,
-                                                       i.TotalView,
-                                                       i.WithOwner
-                                                   }).Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted).OrderByDescending(p => p.TotalView).Take(5);
+            var posts = context.Posts.Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted).OrderByDescending(p => p.TotalView).Take(5).ToList();
             List<PostViewModel> models = new List<PostViewModel>();
             foreach (var post in posts)
             {
-                Infrastructure infrastructure = new Infrastructure
-                {
-                    AirCond = post.AirCond,
-                    Balcony = post.Balcony,
-                    Bath = post.Bath,
-                    ElecPrice = post.ElecPrice,
-                    WaterPrice = post.WaterPrice,
-                    Fridge = post.Fridge,
-                    Kitchen = post.Kitchen,
-                    WaterHeater = post.WaterHeater
-                };
-                AddressNearBy addressNearBy = new AddressNearBy()
-                {
-                    Medical = post.Medical,
-                    BusStation = post.BusStation,
-                    Education = post.Education,
-                };
+                var user = await userManager.FindByIdAsync(post.UserId.ToString());
                 PostViewModel model = new PostViewModel()
                 {
                     PostId = post.PostId,
@@ -706,16 +582,16 @@ namespace EasyAccomod.Core.Services.Posts
                     Commune = post.Commune,
                     Street = post.Street,
                     Rooms = post.Rooms,
-                    AddressNearBy = addressNearBy,
+                    AddressNearBy = null,
                     Price = post.Price,
                     Area = post.Area,
                     Images = post.Images,
                     Hired = post.Hired,
-                    Infrastructure = infrastructure,
-                    Contact = post.PhoneNumber,
-                    UserName = post.UserName,
-                    FullNameOwner = post.LastName + " " + post.FirstName,
-                    EmailOwner = post.Email,
+                    Infrastructure = null,
+                    Contact = user.PhoneNumber,
+                    UserName = user.UserName,
+                    FullNameOwner = user.LastName + " " + user.FirstName,
+                    EmailOwner = user.Email,
                     EffectiveTime = post.EffectiveTime,
                     PublicTime = post.PublicTime,
                     TotalLike = post.TotalLike,
@@ -727,6 +603,43 @@ namespace EasyAccomod.Core.Services.Posts
             }
             return models;
         }
+        public async Task<List<PostViewModel>> GetMostLikePosts()
+        {
+            var posts = context.Posts.Where(p => p.IsDetele == false && p.PostStatus == PostStatusEnum.Accepted).OrderByDescending(p => p.TotalLike).Take(5).ToList();
+            List<PostViewModel> models = new List<PostViewModel>();
+            foreach (var post in posts)
+            {
+                var user = await userManager.FindByIdAsync(post.UserId.ToString());
+                PostViewModel model = new PostViewModel()
+                {
+                    PostId = post.PostId,
+                    City = post.City,
+                    District = post.District,
+                    Commune = post.Commune,
+                    Street = post.Street,
+                    Rooms = post.Rooms,
+                    AddressNearBy = null,
+                    Price = post.Price,
+                    Area = post.Area,
+                    Images = post.Images,
+                    Hired = post.Hired,
+                    Infrastructure = null,
+                    Contact = user.PhoneNumber,
+                    UserName = user.UserName,
+                    FullNameOwner = user.LastName + " " + user.FirstName,
+                    EmailOwner = user.Email,
+                    EffectiveTime = post.EffectiveTime,
+                    PublicTime = post.PublicTime,
+                    TotalLike = post.TotalLike,
+                    TotalView = post.TotalView,
+                    PostStatus = post.PostStatus,
+                    RoomCategoryId = post.RoomCategoryId
+                };
+                models.Add(model);
+            }
+            return models;
+        }
+
         public async Task<PostViewModel> ViewPost(long postId)
         {
             var post = context.Posts.Where(x => x.PostId == postId && x.PostStatus == PostStatusEnum.Accepted).FirstOrDefault();

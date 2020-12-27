@@ -23,6 +23,7 @@ namespace EasyAccomod.Core.Services.Posts
         Task<List<PostViewModel>> GetAllPostForMod(long accessId);
         Task<Post> SetPostStatus(long postId,long accessId,PostStatusEnum postStatusEnum);
         Task<List<PostViewModel>> GetMostViewPosts();
+        Task<List<PostViewModel>> GetMostLikePosts();
         Task<Post> DeletePost(long postId,long accessId);
         List<PostViewModel> SearchPost(SearchPostModel model);
     }
