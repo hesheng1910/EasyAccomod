@@ -58,7 +58,9 @@ namespace EasyAccomod.FrontendApi
             services.AddIdentity<AppUser, AppRole>()
                 .AddEntityFrameworkStores<EasyAccDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddDistributedMemoryCache();           // Đăng ký dịch vụ lưu cache trong bộ nhớ 
             services.AddSession(cfg => {                    // Đăng ký dịch vụ Session
                 cfg.Cookie.Name = "EasyAcc";             // Đặt tên Session - tên này sử dụng ở Browser (Cookie)
