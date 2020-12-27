@@ -29,6 +29,11 @@ namespace EasyAccomod.Core.Services.Notifications
             return notif;
         }
 
+        public List<Notification> GetAll()
+        {
+            return context.Notifications.ToList();
+        }
+
         public List<Notification> GetNotificationForMod()
         {
             return context.Notifications.Where(x => x.OfMod == true).ToList();

@@ -104,7 +104,7 @@ namespace EasyAccomod.Core.Services.User
         {
             if (await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
-            var user = _userManager.Users.Where(x => x.Id == id && x.IsConfirm).FirstOrDefault();
+            var user = _userManager.Users.Where(x => x.Id == id).FirstOrDefault();
             if (user == null)
             {
                 throw new ServiceException("User không tồn tại");

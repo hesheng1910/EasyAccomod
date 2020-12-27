@@ -28,5 +28,10 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(notificationService.GetNotificationForMod());
         }
+        [HttpGet("getAll")]
+        public IActionResult GetAll()
+        {
+            return Ok(notificationService.GetAll());
+        }
     }
 }
