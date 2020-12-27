@@ -47,15 +47,14 @@ namespace EasyAccomod.FrontendApi.Controllers
             return Ok(await notificationService.DeleteNotification(notiId,accessId));
         }
         [HttpGet("getAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(notificationService.GetAll());
+            var session = HttpContext.Session;
+            var userId = session.GetString(CommonConstants.USER_SESSION);
+            if (userId == null) return Unauthorized();
+            var accessId = Convert.ToInt64(userId);
+            return Ok(await notificationService.GetAll(accessId));
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(long id)
-        {
-            var result = await notificationService.DeleteNotification(id);
-            return Ok(result);
-        }
+
     }
 }

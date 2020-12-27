@@ -39,6 +39,13 @@ namespace EasyAccomod.Core.Services.Notifications
             return notif;
         }
 
+        public async Task<List<Notification>> GetAll(long accessId)
+        {
+            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
+                throw new ServiceException("Tài khoản không có quyền truy cập");
+            return context.Notifications.ToList();
+        }
+
         public async Task<List<Notification>> GetNotificationForMod(long accessId)
         {
             if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)

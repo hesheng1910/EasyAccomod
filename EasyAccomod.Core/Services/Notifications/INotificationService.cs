@@ -11,5 +11,6 @@ namespace EasyAccomod.Core.Services.Notifications
         Task<List<Notification>> GetNotificationForMod(long accessId);
         Task<List<Notification>> GetNotificationForOwner(long accessId);
         Task<Notification> DeleteNotification(long notifId,long accessId);
+        Task<List<Notification>> GetAll(long accessId);
     }
 }
