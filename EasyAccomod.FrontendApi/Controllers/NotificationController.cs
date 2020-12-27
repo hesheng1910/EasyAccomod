@@ -33,5 +33,11 @@ namespace EasyAccomod.FrontendApi.Controllers
         {
             return Ok(notificationService.GetAll());
         }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var result = await notificationService.DeleteNotification(id);
+            return Ok(result);
+        }
     }
 }
