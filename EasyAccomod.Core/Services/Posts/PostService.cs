@@ -246,8 +246,6 @@ namespace EasyAccomod.Core.Services.Posts
         }
         public async Task<List<PostViewModel>> GetAllPost(long accessId)
         {
-            if (await CheckUserAndRole(accessId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(accessId, CommonConstants.ADMIN) == false)
-                throw new ServiceException("Tai khoan khong du quyen dang nhap");
             var posts = context.Infrastructures.Join(context.Posts, i => i.Id, p => p.InfrastructureId,
                                                 (i, p) => new
                                                 {
