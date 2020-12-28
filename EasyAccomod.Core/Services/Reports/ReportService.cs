@@ -33,11 +33,13 @@ namespace EasyAccomod.Core.Services.Reports
         {
             if (await CheckUserAndRole(userId, CommonConstants.MODERATOR) == false && await CheckUserAndRole(userId, CommonConstants.ADMIN) == false && await CheckUserAndRole(userId, CommonConstants.RENTER) == false)
                 throw new ServiceException("Tài khoản không có quyền truy cập");
+            var user = userManager.Users.Where(x => x.Id == userId && x.IsConfirm).FirstOrDefault();
+            if (user == null) throw new ServiceException("Tài khoản không tồn tại");
             var post = context.Posts.Where(p => p.PublicTime < DateTime.Now && p.PostStatus == Enums.PostStatusEnum.Accepted && p.PostId == model.PostId);
             if (post == null) throw new ServiceException("Bài đăng không tồn tại");
             Report report = new Report()
             {
-                UserName = model.UserName,
+                UserName = user.UserName,
                 Reason = model.Reason,
                 PostId = model.PostId,
                 IsDelete = false
